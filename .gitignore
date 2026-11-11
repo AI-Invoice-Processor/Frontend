@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local deployment secrets
+.env
+.env.*
+!.env.example
+frontend-deploy.tgz

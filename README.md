@@ -24,6 +24,31 @@ pnpm run lint
 pnpm test
 ```
 
+Para el equipo que usa npm, los mismos comandos son:
+
+```bash
+npm install
+npm run dev
+npm run build
+npm run lint
+npm test
+```
+
+`pnpm-lock.yaml` se conserva para el entorno local y `package-lock.json` fija la instalación reproducible del equipo y de Docker.
+
+## Docker y despliegue
+
+La imagen de producción se construye con `Dockerfile` y se sirve mediante Nginx. El archivo `docker-compose.prod.yml` levanta el frontend y el proxy Caddy sobre la red externa `ai-invoice-network`; el backend se publica internamente como `backend:8000` bajo `/api`.
+
+Para una prueba local, crea la red una vez y levanta el servicio:
+
+```bash
+docker network create ai-invoice-network 2>/dev/null || true
+docker compose -f docker-compose.prod.yml up --build
+```
+
+El despliegue automático se ejecuta en cada push a `main` mediante `.github/workflows/deploy.yml`. Requiere los secretos `DEPLOY_HOST`, `DEPLOY_USER`, `DEPLOY_SSH_KEY` y `DEPLOY_KNOWN_HOSTS`.
+
 Copia `.env.example` como `.env`. `VITE_DATA_MODE=mock` es el modo actual. `VITE_API_BASE_URL` documenta el destino futuro; no se consumen servicios reales todavía.
 
 ## Rutas

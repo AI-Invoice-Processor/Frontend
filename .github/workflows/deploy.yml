@@ -1,0 +1,80 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-frontend
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify frontend
+        run: |
+          npm run lint
+          npm test -- --run
+          npm run build
+
+      - name: Package deployment
+        run: tar --exclude=.git --exclude=node_modules --exclude=dist --exclude=.env -czf frontend-deploy.tgz .
+
+      - name: Configure SSH
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d "$RUNNER_TEMP/ssh"
+          install -m 600 /dev/null "$RUNNER_TEMP/ssh/deploy_key"
+          printf '%s\n' "$DEPLOY_SSH_KEY" > "$RUNNER_TEMP/ssh/deploy_key"
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > "$RUNNER_TEMP/ssh/known_hosts"
+
+      - name: Upload frontend
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+        run: |
+          scp -i "$RUNNER_TEMP/ssh/deploy_key" \
+            -o UserKnownHostsFile="$RUNNER_TEMP/ssh/known_hosts" \
+            -o StrictHostKeyChecking=yes \
+            frontend-deploy.tgz "$DEPLOY_USER@$DEPLOY_HOST:/tmp/frontend-deploy.tgz"
+
+      - name: Deploy frontend container
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+        run: |
+          ssh -i "$RUNNER_TEMP/ssh/deploy_key" \
+            -o UserKnownHostsFile="$RUNNER_TEMP/ssh/known_hosts" \
+            -o StrictHostKeyChecking=yes "$DEPLOY_USER@$DEPLOY_HOST" 'bash -se' <<'REMOTE'
+          set -eu
+          base=/opt/ai-invoice-processor
+          mkdir -p "$base/frontend"
+          docker network inspect ai-invoice-network >/dev/null 2>&1 || docker network create ai-invoice-network
+          tar -xzf /tmp/frontend-deploy.tgz -C "$base/frontend"
+          rm -f /tmp/frontend-deploy.tgz
+          cd "$base/frontend"
+          docker compose -f docker-compose.prod.yml up -d --build frontend caddy
+          docker compose -f docker-compose.prod.yml ps
+          container="$(docker compose -f docker-compose.prod.yml ps -q frontend)"
+          test -n "$container"
+          test "$(docker inspect --format '{{.State.Health.Status}}' "$container")" = healthy
+          REMOTE
