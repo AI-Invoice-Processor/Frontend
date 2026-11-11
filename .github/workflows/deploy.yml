@@ -35,7 +35,7 @@ jobs:
           npm run build
 
       - name: Package deployment
-        run: tar --exclude=.git --exclude=node_modules --exclude=dist --exclude=.env --exclude=frontend-deploy.tgz -czf frontend-deploy.tgz .
+        run: tar --exclude=.git --exclude=node_modules --exclude=dist --exclude=.env -czf "$RUNNER_TEMP/frontend-deploy.tgz" .
 
       - name: Configure SSH
         env:
@@ -55,7 +55,7 @@ jobs:
           scp -i "$RUNNER_TEMP/ssh/deploy_key" \
             -o UserKnownHostsFile="$RUNNER_TEMP/ssh/known_hosts" \
             -o StrictHostKeyChecking=yes \
-            frontend-deploy.tgz "$DEPLOY_USER@$DEPLOY_HOST:/tmp/frontend-deploy.tgz"
+            "$RUNNER_TEMP/frontend-deploy.tgz" "$DEPLOY_USER@$DEPLOY_HOST:/tmp/frontend-deploy.tgz"
 
       - name: Deploy frontend container
         env:
