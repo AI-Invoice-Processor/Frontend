@@ -70,6 +70,10 @@ export function Shell({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
   }, [dark]);
+  useEffect(() => {
+    document.body.classList.toggle("menu-open", open);
+    return () => document.body.classList.remove("menu-open");
+  }, [open]);
   return (
     <div className="app-shell">
       <aside className={`sidebar ${open ? "is-open" : ""}`}>
