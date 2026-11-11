@@ -35,7 +35,7 @@ jobs:
           npm run build
 
       - name: Package deployment
-        run: tar --exclude=.git --exclude=node_modules --exclude=dist --exclude=.env -czf frontend-deploy.tgz .
+        run: tar --exclude=.git --exclude=node_modules --exclude=dist --exclude=.env --exclude=frontend-deploy.tgz -czf frontend-deploy.tgz .
 
       - name: Configure SSH
         env:
@@ -76,5 +76,11 @@ jobs:
           docker compose -f docker-compose.prod.yml ps
           container="$(docker compose -f docker-compose.prod.yml ps -q frontend)"
           test -n "$container"
-          test "$(docker inspect --format '{{.State.Health.Status}}' "$container")" = healthy
+          for attempt in $(seq 1 20); do
+            health="$(docker inspect --format '{{.State.Health.Status}}' "$container")"
+            [ "$health" = healthy ] && exit 0
+            [ "$health" = unhealthy ] && exit 1
+            sleep 3
+          done
+          exit 1
           REMOTE
