@@ -20,9 +20,13 @@ let valid = true;
 if (title) valid = validate("PR title", title) && valid;
 
 const range = baseSha ? `${baseSha}..${headSha}` : headSha;
-const subjects = execFileSync("git", ["log", "--format=%s", range], {
-  encoding: "utf8",
-}).trim();
+const subjects = execFileSync(
+  "git",
+  ["log", "--no-merges", "--format=%s", range],
+  {
+    encoding: "utf8",
+  },
+).trim();
 
 for (const subject of subjects ? subjects.split("\n") : []) {
   valid = validate("commit", subject) && valid;
