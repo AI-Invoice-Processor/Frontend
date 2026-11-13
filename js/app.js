@@ -1547,7 +1547,7 @@
     const code = String(check.rule_id || "—");
     const definition = RULE_DEFINITIONS[code] || {
       title: "Control documental",
-      description: "verificación recibida del backend",
+      description: "verificación registrada en el expediente",
     };
     const status = String(check.result || "not_evaluated");
     const reason = backendTextLabel(check.reason || "Datos insuficientes");
@@ -1651,7 +1651,7 @@
     return {
       preview: label,
       badge: document ? `[${String(document.processing_status || "RECIBIDO").toUpperCase()}]` : "[NO ASOCIADO]",
-      kind: document ? (document.available === false ? `Documento ${document.category} registrado, pero el archivo no está disponible en el volumen` : `Documento ${document.category} recibido por el backend`) : "No existe un documento asociado en el expediente",
+      kind: document ? (document.available === false ? `Documento ${document.category} registrado, pero el archivo no está disponible en el volumen` : `Documento ${document.category} registrado en el expediente`) : "No existe un documento asociado en el expediente",
       number: label,
       rows: lines.length ? lines : [["Sin detalle estructurado disponible", "—", "—", "—"]],
       subtotal: amountText(invoice.subtotal),
@@ -1659,7 +1659,7 @@
       total: amountText(invoice.total),
       footer: document
         ? `SHA-256 ${document.sha256 || "no disponible"} · Estado técnico: ${document.processing_status || "no disponible"}${document.available === false ? " · Archivo no disponible para descarga" : ""}`
-        : "El backend no reportó este tipo de documento para el expediente.",
+        : "No se reportó este tipo de documento para el expediente.",
     };
   };
 
@@ -1749,7 +1749,7 @@
       caseData.vendor ? `Proveedor: ${caseData.vendor}` : "",
       caseData.order && caseData.order !== "Orden no asociada" ? `Orden: ${caseData.order}` : "",
       caseData.contract && caseData.contract !== "Contrato no asociado" ? `Contrato: ${caseData.contract}` : "",
-    ].filter(Boolean).join(" · ") || "Contexto del expediente recibido desde el backend";
+    ].filter(Boolean).join(" · ") || "Contexto del expediente registrado";
     const findingSummary = exceptionItems.length
       ? `Se ${exceptionItems.length === 1 ? "detectó" : "detectaron"} ${exceptionItems.length} ${exceptionItems.length === 1 ? "hallazgo" : "hallazgos"} que requieren revisión: ${exceptionItems.map((item) => `${item.type} (${item.severity})`).join(" · ")}.`
       : failed.length
@@ -1788,11 +1788,11 @@
       summaryTone: tone,
       summaryHeading: "Síntesis del modelo para la causación contable",
       summaryCopy: escapeHtml(summary),
-      triggerLabel: "Abrir respuesta estructurada del backend",
+      triggerLabel: "Abrir respuesta estructurada del expediente",
       readyTitle: `RESPUESTA ${proposal?.generated_by === "CLAUDE" ? "DE CLAUDE" : "DEL MOTOR"}`,
       readySub: proposal ? `Generada por ${backendStatusLabel(proposal.generated_by)} · ${caseData.invoice}` : "Propuesta aún no disponible",
       streamSteps: [
-        `Backend · Consultando expediente ${caseData.invoice}...`,
+        `Consultando expediente ${caseData.invoice}...`,
         `Etapas 4 a 6 · Leyendo reglas, riesgo y propuesta...`,
         "Respuesta estructurada lista para revisión.",
       ],
@@ -1881,11 +1881,11 @@
         ),
         value: backendStatusLabel(check.result),
         tone: check.result === "passed" ? "ok" : "warning",
-      })) : [{ icon: "warning", symbol: "!", title: "Validación pendiente", detail: "El backend aún no reporta controles para esta etapa.", value: backendStatusLabel("not_evaluated"), tone: "warning", rules: "Backend", breakdown: [], note: "No se muestran valores inventados." }],
+      })) : [{ icon: "warning", symbol: "!", title: "Validación pendiente", detail: "Aún no se reportan controles para esta etapa.", value: backendStatusLabel("not_evaluated"), tone: "warning", rules: "Validación", breakdown: [], note: "No se muestran valores inventados." }],
       matchTitle: payload.matching?.matching_status ? `Cruce documental: ${payload.matching.matching_status}` : "Cruce documental no reportado",
-      matchSubtitle: firstIssue?.message || firstIssue?.reason || "Resultado de asociación recibido desde el backend.",
-      exceptionTitle: exceptions.length ? `${exceptions.length} excepción(es) reportada(s) por el backend` : "Sin excepciones abiertas reportadas",
-      exceptionCopy: exceptions.length ? exceptions.map((item) => escapeHtml(item.message || item.type || "Excepción sin detalle")).join(" · ") : "El backend no reporta excepciones abiertas para este expediente.",
+      matchSubtitle: firstIssue?.message || firstIssue?.reason || "Resultado de asociación registrado para el expediente.",
+      exceptionTitle: exceptions.length ? `${exceptions.length} excepción(es) registradas` : "Sin excepciones abiertas reportadas",
+      exceptionCopy: exceptions.length ? exceptions.map((item) => escapeHtml(item.message || item.type || "Excepción sin detalle")).join(" · ") : "No se reportan excepciones abiertas para este expediente.",
       proposalStatus: proposalData ? backendStatusLabel(proposalData.status) : "Sin propuesta",
       proposalPill: ["READY_FOR_APPROVAL", "APPROVED"].includes(proposalData?.status) ? "pill--ready" : "pill--review",
       proposalAccount: proposalData ? `${proposalData.account_code || "—"} · ${proposalData.cost_center_code || "—"}` : "—",
@@ -1918,7 +1918,7 @@
         <span class="queue-row__main"><strong>${escapeHtml(data.invoice)} · ${escapeHtml(data.statusLabel)}</strong><span>${escapeHtml(data.vendor)}</span><small>${escapeHtml(data.subtitle)}</small></span>
         <span class="queue-row__meta"><span class="pill ${data.status === "ready" ? "pill--ready" : data.status === "processing" ? "pill--neutral" : "pill--review"}">${escapeHtml(data.statusLabel)}</span><small class="queue-row__amount">${escapeHtml(amountText(data.invoiceData.total))}</small></span>
       </button>
-    `).join("") || `<div class="empty-filter"><strong>No hay expedientes en el backend.</strong><span>Registra una factura para iniciar el proceso por etapas.</span></div>`;
+    `).join("") || `<div class="empty-filter"><strong>No hay expedientes registrados.</strong><span>Registra una factura para iniciar el proceso por etapas.</span></div>`;
     $$("[data-queue-list] .queue-row").forEach((row) => row.addEventListener("click", () => setActiveCase(row.dataset.case)));
   };
 
@@ -1939,7 +1939,7 @@
     `));
     const pagination = $("[data-documents-pagination]");
     if (!rows.length) {
-      list.insertAdjacentHTML("beforeend", `<div class="doc-table__row"><span>No hay documentos devueltos por el backend.</span></div>`);
+      list.insertAdjacentHTML("beforeend", `<div class="doc-table__row"><span>No hay documentos registrados.</span></div>`);
       if (pagination) pagination.hidden = true;
       return;
     }
@@ -2078,7 +2078,7 @@
         const totalOccurrences = current.checks.filter((item) => String(item.rule_id || "") === code).length;
         return renderRuleItem(check, occurrences[code], totalOccurrences);
       }).join("");
-      const empty = `<div class="rules-empty-state"><strong>Sin controles reportados</strong><span>El backend no devolvió verificaciones de este bloque para ${escapeHtml(current.invoice)}.</span></div>`;
+      const empty = `<div class="rules-empty-state"><strong>Sin controles reportados</strong><span>No se registraron verificaciones de este bloque para ${escapeHtml(current.invoice)}.</span></div>`;
       return `<article class="rule-group-card">
         <div class="rule-group-card__head">
           <span class="activity-badge activity-badge--${group.tone}"><img src="${group.icon}" alt="" /></span>
@@ -2101,7 +2101,7 @@
     backendListSignature = "";
     documentsPage = 1;
     const queue = $("[data-queue-list]");
-    if (queue) queue.innerHTML = `<div class="empty-filter"><strong>Conectando con el backend…</strong><span>Preparando los expedientes del proceso por etapas.</span></div>`;
+    if (queue) queue.innerHTML = `<div class="empty-filter"><strong>Conectando con el sistema…</strong><span>Preparando los expedientes del proceso por etapas.</span></div>`;
     const documents = $("[data-documents-list]");
     if (documents) {
       const header = $(".doc-table__head", documents);
@@ -2344,7 +2344,7 @@
     if (findingList) {
       findingList.innerHTML = findings.map((finding) => {
         const percentage = Math.round((Number(finding.count) / findingTotal) * 100);
-        return `<div class="finding-item"><span class="activity-badge activity-badge--amber">!</span><span class="finding-item__body"><span class="finding-item__top"><strong>${escapeHtml(backendStatusLabel(finding.type))}</strong><span class="pill pill--review">Backend</span></span><span class="finding-item__progress-row"><span class="finding-bar finding-bar--amber"><i data-bar-width="${percentage}%" style="width:${percentage}%"></i></span><span class="finding-stat"><span class="finding-count">${finding.count} facturas</span><strong class="finding-pct">${percentage} %</strong></span></span></span></div>`;
+        return `<div class="finding-item"><span class="activity-badge activity-badge--amber">!</span><span class="finding-item__body"><span class="finding-item__top"><strong>${escapeHtml(backendStatusLabel(finding.type))}</strong><span class="pill pill--review">Validación</span></span><span class="finding-item__progress-row"><span class="finding-bar finding-bar--amber"><i data-bar-width="${percentage}%" style="width:${percentage}%"></i></span><span class="finding-stat"><span class="finding-count">${finding.count} facturas</span><strong class="finding-pct">${percentage} %</strong></span></span></span></div>`;
       }).join("") || `<div class="empty-filter"><strong>No hay hallazgos reportados.</strong><span>La distribución se actualiza con las excepciones persistidas.</span></div>`;
     }
     const monthly = Array.isArray(summary.monthly) ? summary.monthly : [];
@@ -2375,7 +2375,7 @@
       const orderHeight = `${Math.max(5, Math.round((orderedValue / maxAmount) * 100))}%`;
       button.dataset.inv = `$${invoiceValue.toLocaleString("es-CO")}`;
       button.dataset.oc = `$${orderedValue.toLocaleString("es-CO")}`;
-      button.dataset.diff = `${difference >= 0 ? "+" : ""}${amountText(difference)}${differencePercent} · Backend`;
+      button.dataset.diff = `${difference >= 0 ? "+" : ""}${amountText(difference)}${differencePercent}`;
       const bars = $$(".bar-pill", button);
       if (bars[0]) bars[0].style.height = invoiceHeight;
       if (bars[1]) bars[1].style.height = orderHeight;
@@ -3308,7 +3308,7 @@
               </dl>
             </article>
           `).join("")
-        : `<div class="lmm-empty-context">No hay excepciones detalladas reportadas por el backend.</div>`;
+        : `<div class="lmm-empty-context">No hay excepciones detalladas reportadas.</div>`;
     }
     setText("[data-lmm-exception-count]", `${exceptionItems.length} ${exceptionItems.length === 1 ? "hallazgo" : "hallazgos"}`);
 
@@ -3350,9 +3350,9 @@
     }
     const tableBody = $("[data-lmm-table-body]");
     if (tableBody) {
-      tableBody.innerHTML = (lmm.rows || []).map((row) => `<tr>${row.map((value) => `<td>${escapeHtml(value)}</td>`).join("")}</tr>`).join("") || `<tr><td colspan="4">El backend no devolvió controles tabulares para este expediente.</td></tr>`;
+      tableBody.innerHTML = (lmm.rows || []).map((row) => `<tr>${row.map((value) => `<td>${escapeHtml(value)}</td>`).join("")}</tr>`).join("") || `<tr><td colspan="4">No se reportaron controles tabulares para este expediente.</td></tr>`;
     }
-    if ($("[data-lmm-table-caption]")) $("[data-lmm-table-caption]").textContent = lmm.tableCaption || "Valores recibidos del backend";
+    if ($("[data-lmm-table-caption]")) $("[data-lmm-table-caption]").textContent = lmm.tableCaption || "Valores de la validación";
 
     if ($("[data-lmm-footer-hash]"))
       $("[data-lmm-footer-hash]").textContent = lmm.hash;
@@ -4028,7 +4028,7 @@
         }).then((payload) => {
           refreshCaseAfterAction(caseId, payload);
           closeAllModals();
-          toast("Decisión registrada en el Backend.");
+          toast("Decisión registrada en el expediente.");
         }).catch((error) => {
           toast(error.message || "No se pudo registrar la decisión.");
         }).finally(() => {
@@ -4361,7 +4361,7 @@
   const downloadJSON = (kind = "frontend") => {
     const current = cases[activeCase];
     if (!current) {
-      toast("No hay un expediente cargado desde el backend para exportar.");
+      toast("No hay un expediente registrado para exportar.");
       return;
     }
     const payload = {
@@ -4736,7 +4736,7 @@
     $("[data-process-files]")?.addEventListener("click", async () => {
       if (uploadInProgress || !selectedUploadFiles.length) return;
       if (!window.NepxaApi) {
-        toast("No se pudo conectar al backend; los documentos no se registraron.");
+        toast("No se pudo conectar con el sistema; los documentos no se registraron.");
         return;
       }
 
@@ -5123,7 +5123,7 @@
       console.warn("[ai-invoice-processor] Backend no disponible", error);
       clearBackendViews();
       finishWorkspaceTransition();
-      toast("Backend no disponible: no se muestran datos simulados.");
+      toast("Sistema no disponible: no se muestran datos simulados.");
     });
   });
 })();
