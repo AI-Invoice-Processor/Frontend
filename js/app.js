@@ -1288,9 +1288,19 @@
       .join(" ");
   };
 
+  const escapeRegExp = (value) => String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
   const backendTextLabel = (value) => Object.entries(BACKEND_STATUS_LABELS)
     .sort(([left], [right]) => right.length - left.length)
-    .reduce((text, [raw, label]) => text.split(raw).join(label), String(value ?? ""));
+    .reduce((text, [raw, label]) => {
+      // Solo traducir códigos completos. Evita corromper palabras como
+      // "EXCEPCIONES" al reemplazar el código "EXCEPCION".
+      const tokenPattern = new RegExp(
+        `(^|[^A-Za-z0-9_])${escapeRegExp(raw)}(?![A-Za-z0-9_])`,
+        "g",
+      );
+      return text.replace(tokenPattern, (_, prefix) => `${prefix}${label}`);
+    }, String(value ?? ""));
 
   const documentCategoryLabel = (category) => ({
     invoice: "Factura",
@@ -1578,6 +1588,16 @@
         status: backendStatusLabel(exception.resolution_status || (exception.requires_review ? "OPEN" : "Sin estado")),
       };
     });
+    const contextSubtitle = [
+      caseData.vendor ? `Proveedor: ${caseData.vendor}` : "",
+      caseData.order && caseData.order !== "Orden no asociada" ? `Orden: ${caseData.order}` : "",
+      caseData.contract && caseData.contract !== "Contrato no asociado" ? `Contrato: ${caseData.contract}` : "",
+    ].filter(Boolean).join(" · ") || "Contexto del expediente recibido desde el backend";
+    const findingSummary = exceptionItems.length
+      ? `Se ${exceptionItems.length === 1 ? "detectó" : "detectaron"} ${exceptionItems.length} ${exceptionItems.length === 1 ? "hallazgo" : "hallazgos"} que requieren revisión: ${exceptionItems.map((item) => `${item.type} (${item.severity})`).join(" · ")}.`
+      : failed.length
+        ? `Se ${failed.length === 1 ? "detectó" : "detectaron"} ${failed.length} ${failed.length === 1 ? "control pendiente" : "controles pendientes"} de revisión humana.`
+        : "No se detectaron excepciones abiertas en las validaciones recibidas.";
     return {
       execId: `EXPEDIENTE ${caseData.invoiceId}`,
       sources: caseData.apiDocuments.length
@@ -1585,7 +1605,7 @@
         : "Sin documentos asociados",
       kicker: `DICTAMEN ESTRUCTURADO PARA CAUSACIÓN · ${backendStatusLabel(proposal?.generated_by || "SIN PROPUESTA")}`,
       title: `Respuesta estructurada para ${caseData.invoice}`,
-      subtitle: detail || "El backend no reportó una explicación para este expediente.",
+      subtitle: contextSubtitle,
       stampState: caseData.statusLabel.toUpperCase(),
       stampConf: `${checks.filter((check) => check.result === "passed").length} controles OK · ${failed.length} alertas`,
       summaryTone: tone,
@@ -1607,7 +1627,8 @@
       tableCaption: "Resultado de reglas deterministas recibido desde Etapa 4",
       rows,
       blocks: [
-        { title: "Hallazgos de la revisión", copy: escapeHtml(detail || "Sin detalle reportado.") },
+        { title: "Hallazgos de la revisión", copy: escapeHtml(findingSummary) },
+        ...(detail ? [{ title: "Detalle técnico de la validación", copy: escapeHtml(detail) }] : []),
         { title: "Recomendación", copy: escapeHtml(recommendation) },
       ],
       operational: {
