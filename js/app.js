@@ -1228,6 +1228,7 @@
   let liveSyncInFlight = false;
   let backendListSignature = "";
   const backendPayloadSignatures = new Map();
+  let traceTreeAnimation = null;
 
   const apiStatus = (businessStatus) => {
     if (["PROPUESTA", "APROBADA"].includes(businessStatus)) return "ready";
@@ -3043,20 +3044,19 @@
     if ($("[data-node-extract-sub]"))
       $("[data-node-extract-sub]").textContent = `Orden: ${data.order}`;
 
-    let activeBranch = "exception";
-    let branchTone = "is-warning";
-
-    const failedChecks = data.checks.filter((check) => check.result !== "passed");
-    if (!failedChecks.length) {
-      activeBranch = "clean";
-      branchTone = "is-success";
-    } else if (failedChecks.some((check) => String(check.rule_id || "").startsWith("V"))) {
-      activeBranch = "correction";
-      branchTone = data.status === "ready" ? "is-success" : "is-warning";
-    } else {
-      activeBranch = "exception";
-      branchTone = data.status === "ready" ? "is-success" : "is-warning";
-    }
+    const status = String(data.businessState || "").toUpperCase();
+    const extracted = Boolean(data.invoiceData?.extraction_confidence != null
+      || data.invoiceData?.processing_status === "success"
+      || ["EXTRAIDA", "VALIDADA", "EXCEPCION", "PROPUESTA", "APROBADA", "RECHAZADA"].includes(status));
+    const validated = Boolean(data.checks?.length || data.exceptions?.length
+      || ["VALIDADA", "EXCEPCION", "PROPUESTA", "APROBADA", "RECHAZADA"].includes(status));
+    const hasProposal = Boolean(data.proposal || data.proposalStatus && data.proposalStatus !== "Sin propuesta" && ["PROPUESTA", "APROBADA", "RECHAZADA"].includes(status));
+    const decided = ["APROBADA", "RECHAZADA"].includes(status);
+    const failedChecks = (data.checks || []).filter((check) => check.result !== "passed");
+    const hasExceptions = Boolean(failedChecks.length || data.exceptions?.length || status === "EXCEPCION");
+    const activeBranch = !hasExceptions ? "clean"
+      : failedChecks.some((check) => String(check.rule_id || "").startsWith("V")) ? "correction" : "exception";
+    const branchTone = hasExceptions ? "is-warning" : "is-success";
 
     if ($("[data-node-clean-sub]")) $("[data-node-clean-sub]").textContent = "";
     if ($("[data-node-exc-title]")) {
@@ -3078,7 +3078,7 @@
       const proposalStatus = String(data.proposalStatus || "")
         .split("(")[0]
         .trim();
-      $("[data-node-prop-title]").textContent = `Propuesta ${proposalStatus}`;
+      $("[data-node-prop-title]").textContent = hasProposal ? `Propuesta ${proposalStatus}` : "Sin propuesta";
     }
     if ($("[data-node-prop-sub]")) $("[data-node-prop-sub]").textContent = "";
 
@@ -3091,7 +3091,7 @@
       } else if (data.businessState === "RECHAZADA") {
         decTitle.textContent = "Rechazada";
         decSub.textContent = "";
-      } else if (data.status === "ready") {
+      } else if (hasProposal) {
         decTitle.textContent = "Lista para aprobar";
         decSub.textContent = "";
       } else {
@@ -3100,63 +3100,59 @@
       }
     }
 
-    const nodeClean = $('[data-node="branch-clean"]', tree);
-    const nodeExc = $('[data-node="branch-exception"]', tree);
-    const nodeCorr = $('[data-node="branch-correction"]', tree);
-    const nodeProp = $('[data-node="proposal"]', tree);
-    const nodeDec = $('[data-node="decision"]', tree);
+    const branchNode = `branch-${activeBranch}`;
+    const branchOutput = `${activeBranch}-out`;
+    const steps = [
+      { node: "ingest", tone: "is-active", reached: true },
+      { node: "extract", tone: "is-active", reached: extracted },
+      { edge: activeBranch, tone: branchTone, reached: validated },
+      { node: branchNode, tone: branchTone, reached: validated },
+      { edge: branchOutput, tone: branchTone, reached: hasProposal || decided },
+      { node: "proposal", tone: data.proposalPill === "pill--ready" ? "is-success" : "is-warning", reached: hasProposal },
+      { node: "decision", tone: decided ? status === "APROBADA" ? "is-success" : "is-warning" : "is-active", reached: hasProposal || decided },
+    ];
+    const progress = $("[data-tree-progress]", tree);
+    if (progress) progress.textContent = decided
+      ? `Decisión humana registrada: ${data.statusLabel}.`
+      : hasProposal ? "Propuesta lista; pendiente de decisión humana."
+        : validated ? "Validación registrada; pendiente de propuesta o resolución."
+          : extracted ? "Lectura completada; validación pendiente."
+            : "Factura recibida; lectura pendiente.";
 
-    [nodeClean, nodeExc, nodeCorr, nodeProp, nodeDec].forEach((n) => {
-      if (!n) return;
-      n.classList.remove("is-active", "is-warning", "is-success", "is-current");
-    });
-
-    if (activeBranch === "clean" && nodeClean)
-      nodeClean.classList.add(branchTone, "is-current");
-    if (activeBranch === "exception" && nodeExc)
-      nodeExc.classList.add(branchTone, "is-current");
-    if (activeBranch === "correction" && nodeCorr)
-      nodeCorr.classList.add(branchTone, "is-current");
-
-    const propTone =
-      data.proposalPill === "pill--ready" ? "is-success" : "is-warning";
-    if (nodeProp) nodeProp.classList.add(propTone);
-    const decTone =
-      data.businessState === "APROBADA"
-        ? "is-success"
-        : data.businessState === "RECHAZADA"
-          ? "is-warning"
-          : "is-active";
-    if (nodeDec) nodeDec.classList.add(decTone);
-
-    $$(".tree-edge", tree).forEach((edge) => {
-      edge.classList.remove("is-active", "is-warning", "is-success");
-      const key = edge.dataset.edge || "";
-      if (key === activeBranch || key === `${activeBranch}-out`) {
-        edge.classList.add(branchTone);
-      }
-    });
-
-    if (
-      canAnimate &&
-      $('[data-route-view="resumen"]')?.classList.contains("is-visible")
-    ) {
-      window.gsap.fromTo(
-        $$(
-          '.tree-node.is-current, [data-node="proposal"], [data-node="decision"]',
-          tree,
-        ),
-        { scale: 0.96, autoAlpha: 0.7 },
-        {
-          scale: 1,
-          autoAlpha: 1,
-          duration: 0.34,
-          stagger: 0.05,
-          ease: "back.out(1.5)",
-          clearProps: "transform",
-        },
-      );
+    if (traceTreeAnimation) {
+      traceTreeAnimation.timers.forEach(window.clearTimeout);
+      traceTreeAnimation = null;
     }
+    const previousCase = tree.dataset.renderedCase;
+    const previousSteps = previousCase === caseId
+      ? new Set($$(".tree-node.is-lit, .tree-edge.is-lit", tree).map((element) => element.dataset.node || element.dataset.edge))
+      : new Set();
+    const shouldAnimate = !reducedMotion && $('[data-route-view="resumen"]')?.classList.contains("is-visible");
+    const currentNode = decided ? "decision" : hasProposal ? "decision" : validated ? branchNode : extracted ? "extract" : "ingest";
+    $$(".tree-node, .tree-edge", tree).forEach((element) => {
+      element.classList.remove("is-active", "is-warning", "is-success", "is-current", "is-lit", "is-entering");
+    });
+    tree.dataset.renderedCase = shouldAnimate ? caseId : "";
+    const animation = { timers: [] };
+    traceTreeAnimation = animation;
+    let nextDelay = 0;
+    steps.filter((step) => step.reached).forEach((step) => {
+      const element = $(`[data-${step.node ? "node" : "edge"}="${step.node || step.edge}"]`, tree);
+      if (!element) return;
+      const key = step.node || step.edge;
+      const reveal = () => {
+        element.classList.add(step.tone, "is-lit");
+        if (step.node === currentNode) element.classList.add("is-current");
+        if (shouldAnimate && !previousSteps.has(key)) {
+          element.classList.add("is-entering");
+          animation.timers.push(window.setTimeout(() => element.classList.remove("is-entering"), 650));
+        }
+      };
+      if (shouldAnimate && !previousSteps.has(key)) {
+        nextDelay += 180;
+        animation.timers.push(window.setTimeout(reveal, nextDelay));
+      } else reveal();
+    });
   };
 
   const animateResumenCharts = () => {
@@ -3198,18 +3194,6 @@
         stagger: 0.06,
         ease: "power2.out",
         clearProps: "transform",
-      },
-    );
-    window.gsap.fromTo(
-      $$(".tree-node", resumen),
-      { y: 10, autoAlpha: 0 },
-      {
-        y: 0,
-        autoAlpha: 1,
-        duration: 0.4,
-        stagger: 0.045,
-        ease: "power2.out",
-        clearProps: "transform,opacity,visibility",
       },
     );
     window.gsap.fromTo(

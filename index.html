@@ -2238,6 +2238,9 @@
                 </div>
 
                 <div class="trace-tree" data-trace-tree>
+                  <p class="trace-tree__progress" role="status" aria-live="polite" data-tree-progress>
+                    Consultando el avance del expediente…
+                  </p>
                   <div class="trace-tree__planes">
                     <span><i></i> 1. Plano documental y lectura</span>
                     <span><i></i> 2. Ramas de validación y resolución</span>
@@ -2255,32 +2258,38 @@
                       <path
                         class="tree-edge"
                         data-edge="clean"
+                        pathLength="100"
                         d="M 215 88 C 250 88, 250 46, 285 46"
                       ></path>
                       <path
                         class="tree-edge is-warning"
                         data-edge="exception"
+                        pathLength="100"
                         d="M 215 138 C 250 138, 250 138, 285 138"
                       ></path>
                       <path
                         class="tree-edge"
                         data-edge="correction"
+                        pathLength="100"
                         d="M 215 188 C 250 188, 250 230, 285 230"
                       ></path>
                       <!-- Conectores columna 2 a columna 3 -->
                       <path
                         class="tree-edge"
                         data-edge="clean-out"
+                        pathLength="100"
                         d="M 465 46 C 500 46, 500 92, 535 92"
                       ></path>
                       <path
                         class="tree-edge is-warning"
                         data-edge="exception-out"
+                        pathLength="100"
                         d="M 465 138 C 500 138, 500 92, 535 92"
                       ></path>
                       <path
                         class="tree-edge"
                         data-edge="correction-out"
+                        pathLength="100"
                         d="M 465 230 C 500 230, 500 188, 535 188"
                       ></path>
                     </svg>
