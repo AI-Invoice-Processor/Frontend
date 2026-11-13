@@ -1444,6 +1444,98 @@
     return `${intro}${actions ? `<ol class="lmm-action-list">${actions}</ol>` : ""}`;
   };
 
+  const formatDynamicLmmInline = (value) => escapeHtml(value)
+    .replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*([^*]+)\*/g, "<em>$1</em>");
+
+  const parseDynamicLmmBlocks = (value) => {
+    const source = normalizeLmmResponseText(value)
+      .replace(/\s+(?=(?:#{1,6}\s+|\*\*[^*]+\*\*:?\s*$))/gm, "\n")
+      .replace(/\s+(?=\d+[.)]\s+[A-ZÁÉÍÓÚÑÜ])/g, "\n");
+    const lines = source.split("\n").map((line) => line.trim());
+    const blocks = [];
+    let section = { title: "Respuesta de Claude", parts: [] };
+    let paragraph = [];
+    let list = null;
+    let fields = [];
+
+    const flushParagraph = () => {
+      if (!paragraph.length) return;
+      section.parts.push(`<p>${formatDynamicLmmInline(paragraph.join(" "))}</p>`);
+      paragraph = [];
+    };
+    const flushList = () => {
+      if (!list?.items.length) return;
+      const tag = list.type === "ordered" ? "ol" : "ul";
+      const className = list.type === "ordered" ? "lmm-action-list" : "lmm-dynamic-list";
+      section.parts.push(`<${tag} class="${className}">${list.items.map((item) => `<li>${formatDynamicLmmInline(item)}</li>`).join("")}</${tag}>`);
+      list = null;
+    };
+    const flushFields = () => {
+      if (!fields.length) return;
+      section.parts.push(structuredFieldsHtml(fields));
+      fields = [];
+    };
+    const flushSection = () => {
+      flushParagraph();
+      flushList();
+      flushFields();
+      if (section.parts.length) blocks.push({ title: section.title, html: section.parts.join("") });
+      section = { title: "Respuesta de Claude", parts: [] };
+    };
+
+    lines.forEach((line) => {
+      if (!line) {
+        flushParagraph();
+        flushList();
+        flushFields();
+        return;
+      }
+      const markdownHeading = line.match(/^#{1,6}\s+(.+)$/);
+      const boldHeading = line.match(/^\*\*(.+?)\*\*:?$/);
+      const uppercaseHeading = !markdownHeading && !boldHeading
+        && line.length <= 100
+        && /[A-ZÁÉÍÓÚÑÜ]/.test(line)
+        && !/[a-záéíóúñü]/.test(line)
+        && (!line.includes(":") || /:\s*$/.test(line))
+        && !/^[-*•\d]/.test(line);
+      if (markdownHeading || boldHeading || uppercaseHeading) {
+        flushSection();
+        section.title = cleanLmmResponseText((markdownHeading || boldHeading)?.[1] || line.replace(/:$/, ""));
+        return;
+      }
+
+      const ordered = line.match(/^\d+[.)]\s+(.+)$/);
+      const bullet = line.match(/^[-*•]\s+(.+)$/);
+      if (ordered || bullet) {
+        flushParagraph();
+        flushFields();
+        const type = ordered ? "ordered" : "unordered";
+        if (!list || list.type !== type) {
+          flushList();
+          list = { type, items: [] };
+        }
+        list.items.push((ordered || bullet)[1]);
+        return;
+      }
+
+      const field = line.match(/^([^:|]{2,60}):\s+(.+)$/);
+      if (field && !/^https?$/i.test(field[1])) {
+        flushParagraph();
+        flushList();
+        fields.push([cleanLmmResponseText(field[1]), cleanLmmResponseText(field[2])]);
+        return;
+      }
+
+      flushList();
+      flushFields();
+      paragraph.push(line);
+    });
+    flushSection();
+    return blocks.length ? blocks : [{ title: "Respuesta de Claude", html: "<p>El backend no devolvió contenido para mostrar.</p>" }];
+  };
+
   const documentCategoryLabel = (category) => ({
     invoice: "Factura",
     purchase_order: "Orden de compra",
@@ -1729,6 +1821,7 @@
     const riskScoreText = valueOrFallback(risk.score, parsedRisk.score);
     const riskConfidence = valueOrFallback(risk.confidence, parsedRisk.confidenceValue);
     const riskConfidenceText = valueOrFallback(risk.confidence, parsedRisk.confidence);
+    const genericBlocks = parseDynamicLmmBlocks(`${rawDetail}\n${rawRecommendation}`);
     const checksByRule = new Map(checks.map((check) => [check.rule_id, check]));
     const exceptionItems = (caseData.exceptions || []).length
       ? caseData.exceptions.map((exception) => {
@@ -1754,7 +1847,7 @@
       : failed.length
         ? `Se ${failed.length === 1 ? "detectó" : "detectaron"} ${failed.length} ${failed.length === 1 ? "control pendiente" : "controles pendientes"} de revisión humana.`
         : "No se detectaron excepciones abiertas en las validaciones recibidas.";
-    const blocks = structured.isStructured
+    const structuredBlocks = structured.isStructured
       ? [
         structured.documents.length
           ? { title: "Documentos involucrados", html: structuredFieldsHtml(structured.documents) }
@@ -1769,11 +1862,12 @@
           ? { title: "Nota importante", html: `<p>${escapeHtml(structured.note)}</p>` }
           : null,
       ].filter(Boolean)
-      : [
-        { title: "Hallazgos de la revisión", copy: escapeHtml(findingSummary) },
-        ...(detail ? [{ title: "Detalle técnico de la validación", copy: escapeHtml(detail) }] : []),
-        { title: "Recomendación", copy: escapeHtml(recommendation) },
-      ];
+      : [];
+    const blocks = structuredBlocks.length ? structuredBlocks : genericBlocks.length ? genericBlocks : [
+      { title: "Hallazgos de la revisión", copy: escapeHtml(findingSummary) },
+      ...(detail ? [{ title: "Detalle técnico de la validación", copy: escapeHtml(detail) }] : []),
+      { title: "Recomendación", copy: escapeHtml(recommendation) },
+    ];
     return {
       execId: `EXPEDIENTE ${caseData.invoiceId}`,
       sources: caseData.apiDocuments.length
