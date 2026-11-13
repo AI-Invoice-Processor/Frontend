@@ -3949,7 +3949,8 @@
     selected.forEach((file) => {
       const row = d.createElement("div");
       row.className = "file-row";
-      row.innerHTML = `<span><strong>${file.name}</strong> <small>${Math.max(1, Math.round(file.size / 1024))} KB · Listo para lectura</small></span><span>Válido</span>`;
+      row.innerHTML = `<span><strong></strong> <small>${Math.max(1, Math.round(file.size / 1024))} KB · Listo para lectura</small></span><span>Válido</span>`;
+      $("strong", row).textContent = file.name;
       list.appendChild(row);
     });
   };
