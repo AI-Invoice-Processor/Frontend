@@ -22,7 +22,6 @@
       name: "María Contable",
       title: "Aprobadora autorizada",
       short: "María C. · Aprobadora",
-      workspace: "Finanzas · Aprobación",
       canCorrect: true,
       canAuthorize: true,
       canApprove: true,
@@ -32,7 +31,6 @@
       name: "Julián Revisor",
       title: "Revisor financiero",
       short: "Julián R. · Revisor",
-      workspace: "Finanzas · Revisión",
       canCorrect: true,
       canAuthorize: false,
       canApprove: false,
@@ -42,7 +40,6 @@
       name: "Auditoría Interna",
       title: "Consulta y auditoría",
       short: "Auditoría · Lectura",
-      workspace: "Finanzas · Consulta",
       canCorrect: false,
       canAuthorize: false,
       canApprove: false,
@@ -2816,8 +2813,6 @@
     if ($("[data-role-name]")) $("[data-role-name]").textContent = role.name;
     if ($("[data-role-title]")) $("[data-role-title]").textContent = role.title;
     if ($("[data-role-short]")) $("[data-role-short]").textContent = role.short;
-    if ($("[data-workspace-label]"))
-      $("[data-workspace-label]").textContent = role.workspace;
     setActiveCase(activeCase);
   };
 
