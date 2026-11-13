@@ -2818,7 +2818,6 @@
     if ($("[data-role-short]")) $("[data-role-short]").textContent = role.short;
     if ($("[data-workspace-label]"))
       $("[data-workspace-label]").textContent = role.workspace;
-    if ($("[data-setting-role]")) $("[data-setting-role]").value = currentRole;
     setActiveCase(activeCase);
   };
 
@@ -3797,7 +3796,7 @@
       approve.disabled = isClosed || !role.canApprove;
       approve.innerHTML =
         !role.canApprove && !isClosed
-          ? "Requiere rol Aprobadora"
+          ? "Acceso restringido"
           : data.primaryAction;
     }
     if ($("[data-audit-text]")) $("[data-audit-text]").innerHTML = data.audit;
@@ -3938,22 +3937,6 @@
         <label><span>Responsable de la decisión</span><input value="${roleProfiles[currentRole].name} (${roleProfiles[currentRole].title})" readonly></label>
         <label style="grid-column:1 / -1"><span>Motivo detallado (obligatorio)</span><input name="reason" placeholder="Escribe la razón que quedará en la línea de tiempo" required minlength="5"></label>
       `;
-    } else if (mode === "role") {
-      kicker.textContent = "Control de permisos";
-      title.textContent = "Cambiar rol o sesión";
-      desc.textContent =
-        "Simula cómo cambian las acciones permitidas según tu perfil en el equipo financiero.";
-      submit.innerHTML =
-        'Aplicar rol seleccionado <span aria-hidden="true">→</span>';
-      fields.innerHTML = `
-        <label style="grid-column:1 / -1"><span>Selecciona el perfil activo</span><select name="selectedRole">
-          <option value="aprobador" ${currentRole === "aprobador" ? "selected" : ""}>María Contable · Aprobadora autorizada (autoriza excepciones y aprueba)</option>
-          <option value="revisor" ${currentRole === "revisor" ? "selected" : ""}>Julián Revisor · Revisor financiero (corrige lecturas y asocia soportes)</option>
-          <option value="lector" ${currentRole === "lector" ? "selected" : ""}>Auditoría Interna · Consulta (solo lectura de expedientes e historial)</option>
-        </select></label>
-        <label><span>Pantalla pública</span><a class="button button--secondary button--full" href="landing.html">Ir a la portada</a></label>
-        <label><span>Acceso de usuario</span><a class="button button--secondary button--full" href="login.html">Cambiar de cuenta</a></label>
-      `;
     }
 
     modal.hidden = false;
@@ -3985,17 +3968,6 @@
     const current = cases[activeCase];
     const role = roleProfiles[currentRole];
     const time = nowTime();
-
-    if (currentActionMode === "role") {
-      const nextRole = formData.get("selectedRole");
-      if (roleProfiles[nextRole]) {
-        currentRole = nextRole;
-        applyRoleUI();
-        toast(`Rol activo cambiado a: ${roleProfiles[currentRole].title}`);
-      }
-      closeAllModals();
-      return;
-    }
 
     if (!current) return;
     const reason = (formData.get("reason") || "").toString().trim();
@@ -4041,7 +4013,7 @@
     if (currentActionMode === "authorize") {
       if (!role.canAuthorize) {
         toast(
-          "Tu rol actual no tiene permisos para autorizar diferencias comerciales. Cambia a Aprobadora.",
+          "Esta sesión no permite autorizar diferencias comerciales. Ingresa desde la pantalla de acceso con un perfil autorizado.",
         );
         return;
       }
@@ -4448,9 +4420,9 @@
       },
       configuracion: {
         section: "Administración",
-        kicker: "Alcance y permisos",
+        kicker: "Alcance del MVP",
         title: "Configuración",
-        desc: "Ajusta tu rol en la sesión, la política de tolerancia y las reglas de seguridad.",
+        desc: "Consulta la política de tolerancia y los límites de validación del sistema.",
       },
     };
     const currentRoute = routeConfig[view] || routeConfig.resumen;
@@ -4692,9 +4664,6 @@
     });
     updatePeriodTrigger();
 
-    $$("[data-open-role],[data-switch-workspace]").forEach((button) =>
-      button.addEventListener("click", () => openActionModal("role")),
-    );
     $$("[data-open-action-modal]").forEach((button) =>
       button.addEventListener("click", () =>
         openActionModal(button.dataset.openActionModal),
@@ -4869,17 +4838,6 @@
         ),
       ),
     );
-    $$("[data-save-settings]").forEach((button) =>
-      button.addEventListener("click", () => {
-        const selectedRole = $("[data-setting-role]")?.value;
-        if (selectedRole && roleProfiles[selectedRole]) {
-          currentRole = selectedRole;
-          applyRoleUI();
-        }
-        toast("Configuración y rol activo actualizados.");
-      }),
-    );
-
     $$("[data-rule-toggle]").forEach((button) =>
       button.addEventListener("click", () => {
         const active = button.classList.toggle("is-on");
@@ -4971,7 +4929,7 @@
       if (!current) return;
       if (!role.canApprove) {
         toast(
-          "Tu rol actual no puede aprobar propuestas. Cambia al perfil de Aprobadora autorizada.",
+          "Esta sesión no permite aprobar propuestas. Ingresa desde la pantalla de acceso con un perfil autorizado.",
         );
         return;
       }
