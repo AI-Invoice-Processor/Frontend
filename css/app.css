@@ -3882,6 +3882,13 @@ h2,
   background: radial-gradient(circle at 50% 0%, #ffffff 0%, #f2f6fa 100%);
   overflow-x: auto;
 }
+.trace-tree__progress {
+  margin: 0 0 12px;
+  color: var(--blue);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.45;
+}
 .trace-tree__planes {
   display: grid;
   grid-template-columns: 1fr 1.15fr 1fr;
@@ -3947,6 +3954,14 @@ h2,
   stroke-width: 3;
   stroke-dasharray: none;
 }
+.tree-edge.is-entering {
+  stroke-dasharray: 100;
+  animation: tree-edge-reveal 0.65s ease-out both;
+}
+@keyframes tree-edge-reveal {
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
+}
 
 .tree-col {
   position: relative;
@@ -3990,10 +4005,39 @@ h2,
   box-shadow: 0 10px 22px rgba(39, 123, 101, 0.13);
 }
 .tree-node.is-current {
+  position: relative;
   transform: scale(1.02);
   box-shadow:
     0 0 0 3px rgba(53, 95, 139, 0.16),
     0 12px 24px rgba(16, 36, 61, 0.12);
+}
+.tree-node.is-current::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border: 2px solid rgba(53, 95, 139, 0.35);
+  border-radius: 16px;
+  pointer-events: none;
+  animation: tree-current-glow 2.8s ease-in-out infinite;
+}
+.tree-node.is-current.is-warning::after { border-color: rgba(165, 119, 57, 0.42); }
+.tree-node.is-current.is-success::after { border-color: rgba(39, 123, 101, 0.42); }
+@keyframes tree-current-glow {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+.tree-node.is-entering {
+  animation: tree-node-reveal 0.6s ease-out both;
+}
+@keyframes tree-node-reveal {
+  from { opacity: 0.45; transform: scale(0.96); box-shadow: 0 0 0 0 rgba(53, 95, 139, 0); }
+  55% { opacity: 1; transform: scale(1.035); box-shadow: 0 0 0 6px rgba(53, 95, 139, 0.17); }
+  to { opacity: 1; transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tree-node.is-entering,
+  .tree-edge.is-entering,
+  .tree-node.is-current::after { animation: none; }
 }
 .tree-node__icon {
   display: grid;
