@@ -182,7 +182,7 @@ table {
 }
 .workspace-switch {
   display: grid;
-  grid-template-columns: 34px 1fr 14px;
+  grid-template-columns: 34px minmax(0, 1fr);
   align-items: center;
   gap: 9px;
   width: 100%;
@@ -192,10 +192,6 @@ table {
   border-radius: var(--radius-md);
   background: var(--surface-subtle);
   color: var(--navy);
-}
-.workspace-switch:hover {
-  border-color: #aabccc;
-  background: #f1f5f8;
 }
 .workspace-switch__mark {
   display: grid;
@@ -2796,9 +2792,6 @@ body {
 .workspace-switch {
   background: #eef4f8;
 }
-.workspace-switch:hover {
-  background: #e7f0f5;
-}
 .nav-item:hover {
   background: #eaf1f6;
 }
@@ -2901,10 +2894,6 @@ h2,
   background: rgba(255, 255, 255, 0.07);
   color: #fff;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
-}
-.workspace-switch:hover {
-  border-color: rgba(185, 211, 226, 0.42);
-  background: rgba(255, 255, 255, 0.12);
 }
 .workspace-switch small,
 .chevron {

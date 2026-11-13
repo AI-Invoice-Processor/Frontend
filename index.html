@@ -71,19 +71,13 @@
           </button>
         </div>
 
-        <button
-          class="workspace-switch"
-          type="button"
-          data-switch-workspace
-          aria-label="Cambiar espacio o rol de trabajo"
-        >
+        <div class="workspace-switch">
           <span class="workspace-switch__mark">AI</span>
           <span
             ><small>NEPXA 2026 · Reto 04</small
             ><strong data-workspace-label>Finanzas · COP</strong></span
           >
-          <span class="chevron" aria-hidden="true">⌄</span>
-        </button>
+        </div>
 
         <nav class="sidebar__nav">
           <p class="nav-label">Operación</p>
@@ -156,12 +150,11 @@
             ><span
               ><strong data-role-name>María Contable</strong
               ><small data-role-title>Aprobadora autorizada</small></span
-            ><button
+            ><a
               class="icon-button"
-              type="button"
-              data-open-role
-              aria-label="Cambiar rol o cerrar sesión"
-              title="Cambiar rol o cerrar sesión"
+              href="login.html"
+              aria-label="Ir a la pantalla de acceso"
+              title="Ir a la pantalla de acceso"
             >
               <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <path
@@ -173,7 +166,7 @@
                   stroke-linejoin="round"
                 />
               </svg>
-            </button>
+            </a>
           </div>
         </div>
       </aside>
@@ -3107,31 +3100,11 @@
                       <span class="eyebrow__mark"></span> Alcance operativo del
                       MVP
                     </p>
-                    <h2>Parámetros de validación y permisos</h2>
+                    <h2>Parámetros de validación</h2>
                   </div>
-                  <button
-                    class="button button--primary"
-                    type="button"
-                    data-save-settings
-                  >
-                    Guardar configuración
-                  </button>
                 </div>
                 <div class="settings-form">
                   <label
-                    ><span>Rol activo en esta sesión</span
-                    ><select data-setting-role>
-                      <option value="aprobador">
-                        Aprobadora autorizada (autoriza y aprueba)
-                      </option>
-                      <option value="revisor">
-                        Revisora financiera (corrige y adjunta soportes)
-                      </option>
-                      <option value="lector">
-                        Consulta y auditoría (solo lectura)
-                      </option>
-                    </select></label
-                  ><label
                     ><span>Moneda cubierta en la demostración</span
                     ><select>
                       <option>COP · Peso colombiano (precisión decimal)</option>
