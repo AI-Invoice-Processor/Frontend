@@ -7029,7 +7029,8 @@ body {
   white-space: nowrap;
   flex: 1 1 auto;
   overflow: visible;
-  justify-content: space-between;
+  justify-content: center;
+  padding-inline: 40px;
 }
 .review-panel .exception-box .lmm-inline-box,
 .review-panel .exception-box .lmm-ready-banner,
@@ -7041,12 +7042,14 @@ body {
 }
 .review-panel .exception-box .lmm-ready-claude-badge {
   display: flex !important;
+  justify-content: center;
   width: 100% !important;
   max-width: 100%;
   box-sizing: border-box;
 }
 .review-panel .lmm-ready-claude-badge strong {
   display: block;
+  text-align: center;
   min-width: max-content;
   max-width: none;
   overflow: visible;
@@ -7061,9 +7064,15 @@ body {
   -webkit-box-orient: initial;
 }
 .review-panel .lmm-ready-claude-arrow {
+  position: absolute;
+  right: 13px;
   font-size: 18px;
   line-height: 1;
   transition: transform 0.18s ease;
+}
+.review-panel .lmm-ready-claude-badge .claude-mark {
+  position: absolute;
+  left: 13px;
 }
 .review-panel .lmm-ready-claude-badge:hover .lmm-ready-claude-arrow {
   transform: translateX(3px);

@@ -1786,7 +1786,7 @@
       stampState: caseData.statusLabel.toUpperCase(),
       stampConf: `${checks.filter((check) => check.result === "passed").length} controles OK · ${failed.length} alertas`,
       summaryTone: tone,
-      summaryHeading: "Síntesis del modelo para la causación contable",
+      summaryHeading: "Resumen para la causación contable",
       summaryCopy: escapeHtml(summary),
       triggerLabel: "Abrir respuesta estructurada del expediente",
       readyTitle: `RESPUESTA ${proposal?.generated_by === "CLAUDE" ? "DE CLAUDE" : "DEL MOTOR"}`,
@@ -2413,25 +2413,25 @@
 
   const lmmResponses = {
     "FE-9001": {
-      execId: "ID #CLOUD-LMM-9001",
+      execId: "ID #LMM-9001",
       sources:
         "DOC-001.pdf (pág. 1) · DOC-OC-9001.pdf (pág. 1) · DOC-CT-01.pdf",
       kicker: "DICTAMEN ESTRUCTURADO PARA CAUSACIÓN · REGLA D2",
       title:
         "Comparación comercial entre Factura FE-9001 y Orden de Compra OC-9001",
       subtitle:
-        "Respuesta generada en Cloud para el analista financiero · Precisión decimal exacta en COP",
+        "Respuesta de ejemplo para el analista financiero · Precisión decimal exacta en COP",
       stampState: "EXCEPCIÓN D2 (+4,00 %)",
       stampConf: "7 reglas OK · 1 diferencia",
       summaryTone: "warning",
-      summaryHeading: "Síntesis del modelo para la causación contable",
+      summaryHeading: "Resumen para la causación contable",
       summaryCopy:
         'La factura <span class="lmm-tag">FE-9001</span> cumple todas las validaciones aritméticas e impositivas internas, pero su subtotal antes de impuestos (<span class="lmm-num">COP 52.000.000</span>) supera en <span class="lmm-num">+COP 2.000.000 (+4,00 %)</span> el valor autorizado en la Orden de Compra <span class="lmm-tag">OC-9001</span> (<span class="lmm-num">COP 50.000.000</span>). La comparación se realiza estrictamente subtotal contra subtotal para no distorsionar la base con IVA ni retenciones. La causación en la cuenta <span class="lmm-tag">5135</span> queda bloqueada hasta adjuntar soporte de autorización (<span class="lmm-tag">DOC-AUT-01</span>) o nota crédito.',
       triggerLabel: "Comparar con la Orden de Compra",
       readyTitle: "Análisis IA listo · FE-9001",
       readySub: "Revisión completada y disponible",
       streamSteps: [
-        "Agente LMM Cloud · Leyendo DOC-001.pdf y orden DOC-OC-9001.pdf...",
+        "Leyendo DOC-001.pdf y orden DOC-OC-9001.pdf...",
         "Cruzando subtotales comparables antes de IVA ($52 M vs. $50 M)...",
         "Estructurando dictamen de lectura para causación...",
       ],
@@ -2469,11 +2469,11 @@
           copy: 'Para habilitar el paso a estado <span class="lmm-tag">PROPUESTA</span> en la cuenta <span class="lmm-tag">5135 · Servicios</span> y centro de costo <span class="lmm-tag">CC-01</span>, una persona con rol Aprobadora debe asociar el documento de respaldo (adenda o autorización comercial) conservando el hallazgo original en la auditoría.',
         },
       ],
-      plainText: `[REPORTE CLOUD LMM · SOLO LECTURA]\nEXPEDIENTE: INV-001 / FACTURA: FE-9001\nPROVEEDOR: Servicios Integrados Colombia S.A.S. (NIT 900654321-0)\nDOCUMENTOS CRUZADOS: DOC-001.pdf, DOC-OC-9001.pdf, DOC-CT-01.pdf\n\n1. RESUMEN DE CONCILIACIÓN\n- Subtotal Factura (DOC-001):     COP 52.000.000\n- Subtotal Orden (DOC-OC-9001):   COP 50.000.000\n- Diferencia neta en base (D2):  +COP  2.000.000 (+4,00 %)\n- IVA 19 % verificado (V3):       COP  9.880.000\n- Total con IVA (V4):             COP 61.880.000\n\n2. DICTAMEN PARA EL ANALISTA FINANCIERO\n- Estado actual: EXCEPCION (Bloqueo preventivo de causación).\n- Cuenta sugerida por catálogo: 5135 · Servicios / Centro CC-01.\n- Acción requerida en Revisiones: Autorizar diferencia con soporte firmado o solicitar ajuste al emisor.`,
+      plainText: `[REPORTE LMM DE EJEMPLO · SOLO LECTURA]\nEXPEDIENTE: INV-001 / FACTURA: FE-9001\nPROVEEDOR: Servicios Integrados Colombia S.A.S. (NIT 900654321-0)\nDOCUMENTOS CRUZADOS: DOC-001.pdf, DOC-OC-9001.pdf, DOC-CT-01.pdf\n\n1. RESUMEN DE CONCILIACIÓN\n- Subtotal Factura (DOC-001):     COP 52.000.000\n- Subtotal Orden (DOC-OC-9001):   COP 50.000.000\n- Diferencia neta en base (D2):  +COP  2.000.000 (+4,00 %)\n- IVA 19 % verificado (V3):       COP  9.880.000\n- Total con IVA (V4):             COP 61.880.000\n\n2. DICTAMEN PARA EL ANALISTA FINANCIERO\n- Estado actual: EXCEPCION (Bloqueo preventivo de causación).\n- Cuenta sugerida por catálogo: 5135 · Servicios / Centro CC-01.\n- Acción requerida en Revisiones: Autorizar diferencia con soporte firmado o solicitar ajuste al emisor.`,
       hash: "SHA-256: 8f94d2c1a04b...e41b · Trazabilidad NEPXA 2026",
     },
     "FE-1001": {
-      execId: "ID #CLOUD-LMM-1001",
+      execId: "ID #LMM-1001",
       sources:
         "DOC-002.pdf · DOC-OC-1001.pdf · DOC-CT-04.pdf · DOC-REC-1001.pdf",
       kicker: "DICTAMEN ESTRUCTURADO PARA CAUSACIÓN · ESCENARIO E01",
@@ -2483,14 +2483,14 @@
       stampState: "CON PROPUESTA (100 % OK)",
       stampConf: "9 reglas OK · 0 alertas",
       summaryTone: "success",
-      summaryHeading: "Síntesis del modelo para la causación contable",
+      summaryHeading: "Resumen para la causación contable",
       summaryCopy:
         'El expediente <span class="lmm-tag">FE-1001</span> presenta coincidencia exacta entre la factura electrónica (<span class="lmm-tag">DOC-002</span>), la Orden de Compra <span class="lmm-tag">OC-1001</span>, el contrato vigente <span class="lmm-tag">CT-04</span> y el acta de recepción firmada <span class="lmm-tag">REC-1001</span> por un subtotal de <span class="lmm-num">COP 1.000.000</span> (<span class="lmm-num">COP 1.190.000</span> con IVA del 19 %). La propuesta contable en la cuenta <span class="lmm-tag">5135</span> y centro <span class="lmm-tag">CC-02</span> está lista para decisión humana.',
       triggerLabel: "Verificar conciliación con Orden de Compra (LMM)",
       readyTitle: "Análisis IA listo · FE-1001",
       readySub: "Revisión completada y disponible",
       streamSteps: [
-        "Agente LMM Cloud · Verificando factura DOC-002 y orden DOC-OC-1001...",
+        "Verificando factura DOC-002 y orden DOC-OC-1001...",
         "Comprobando acta de recepción DOC-REC-1001 y vigencia de CT-04...",
         "Generando certificado estructurado de propuesta contable...",
       ],
@@ -2527,11 +2527,11 @@
           copy: 'Aunque el resultado técnico es 100 % conforme, el sistema mantiene el estado en <span class="lmm-tag">PROPUESTA</span> hasta que la persona con rol Aprobadora registre su decisión con firma verificada.',
         },
       ],
-      plainText: `[REPORTE CLOUD LMM · SOLO LECTURA]\nEXPEDIENTE: INV-002 / FACTURA: FE-1001\nPROVEEDOR: Consultoría y Procesos Andinos S.A.S. (NIT 900123456-8)\n\n1. RESULTADO DE VALIDACIÓN\n- Reglas de validación: CORRECTAS\n- Cruces: CORRECTOS (OC-1001 + CT-04 + REC-1001)\n- Subtotal: COP 1.000.000 | IVA: COP 190.000 | Total: COP 1.190.000\n\n2. PROPUESTA DE CAUSACIÓN\n- Cuenta: 5135 · Servicios / Centro: CC-02\n- Estado: PROPUESTA (Lista para aprobación humana).`,
+      plainText: `[REPORTE LMM DE EJEMPLO · SOLO LECTURA]\nEXPEDIENTE: INV-002 / FACTURA: FE-1001\nPROVEEDOR: Consultoría y Procesos Andinos S.A.S. (NIT 900123456-8)\n\n1. RESULTADO DE VALIDACIÓN\n- Reglas de validación: CORRECTAS\n- Cruces: CORRECTOS (OC-1001 + CT-04 + REC-1001)\n- Subtotal: COP 1.000.000 | IVA: COP 190.000 | Total: COP 1.190.000\n\n2. PROPUESTA DE CAUSACIÓN\n- Cuenta: 5135 · Servicios / Centro: CC-02\n- Estado: PROPUESTA (Lista para aprobación humana).`,
       hash: "SHA-256: 3c19a7b4d210...91a0 · Trazabilidad NEPXA 2026",
     },
     "FE-1003": {
-      execId: "ID #CLOUD-LMM-1003",
+      execId: "ID #LMM-1003",
       sources:
         "DOC-003.pdf (OCR vs. Imagen) · DOC-OC-1003.pdf · DOC-REC-1003.pdf",
       kicker: "DICTAMEN ESTRUCTURADO PARA CAUSACIÓN · REGLAS V4 Y E07",
@@ -2542,14 +2542,14 @@
       stampState: "FALLO ARITMÉTICO V4",
       stampConf: "8 reglas OK · 1 fallo V4",
       summaryTone: "warning",
-      summaryHeading: "Síntesis del modelo para la causación contable",
+      summaryHeading: "Resumen para la causación contable",
       summaryCopy:
         'Las líneas de la factura <span class="lmm-tag">FE-1003</span> suman un subtotal exacto de <span class="lmm-num">COP 1.000.000</span> (que coincide con la Orden de Compra <span class="lmm-tag">OC-1003</span>) y un IVA del 19 % por <span class="lmm-num">COP 190.000</span>. Sin embargo, el valor total extraído (<span class="lmm-num">COP 1.300.000</span>) presenta un exceso de <span class="lmm-num">+COP 110.000</span> frente a la suma esperada (<span class="lmm-num">COP 1.190.000</span>). El contraste con el soporte <span class="lmm-tag">REC-1003</span> confirma un error de lectura OCR en el dígito de centenas de mil que debe corregirse y revalidarse antes de causar.',
       triggerLabel: "Analizar desajuste aritmético y OC con LMM",
       readyTitle: "Análisis IA listo · FE-1003",
       readySub: "Revisión completada y disponible",
       streamSteps: [
-        "Agente LMM Cloud · Recalculando líneas con precisión Decimal...",
+        "Recalculando líneas con precisión Decimal...",
         "Contrastando total leído ($1,30M) contra suma esperada ($1,19M)...",
         "Generando dictamen de reconstrucción aritmética en Visor LMM...",
       ],
@@ -2586,11 +2586,11 @@
           copy: 'Al corregir el dato extraído en Revisiones sin modificar el archivo original, el sistema anula el fallo previo, vuelve a correr las comprobaciones y habilita la propuesta contable en la cuenta <span class="lmm-tag">5135 / CC-03</span>.',
         },
       ],
-      plainText: `[REPORTE CLOUD LMM · SOLO LECTURA]\nEXPEDIENTE: INV-003 / FACTURA: FE-1003\nPROVEEDOR: Suministros Industriales del Norte S.A.S. (NIT 900456789-3)\n\n1. RECONSTRUCCIÓN DECIMAL\n- Línea 1: 3 * 200.000 - 50.000 = COP 550.000 (OK)\n- Línea 2: 3 * 150.000          = COP 450.000 (OK)\n- Subtotal verificado:           COP 1.000.000 (Coincide con OC-1003)\n- IVA 19 % verificado:          COP   190.000\n- Total esperado vs. leído:     COP 1.190.000 vs. COP 1.300.000 (+110.000)\n\n2. RECOMENDACIÓN PARA CAUSACIÓN\n- Corregir lectura del total a COP 1.190.000 y ejecutar nueva corrida de validación.`,
+      plainText: `[REPORTE LMM DE EJEMPLO · SOLO LECTURA]\nEXPEDIENTE: INV-003 / FACTURA: FE-1003\nPROVEEDOR: Suministros Industriales del Norte S.A.S. (NIT 900456789-3)\n\n1. RECONSTRUCCIÓN DECIMAL\n- Línea 1: 3 * 200.000 - 50.000 = COP 550.000 (OK)\n- Línea 2: 3 * 150.000          = COP 450.000 (OK)\n- Subtotal verificado:           COP 1.000.000 (Coincide con OC-1003)\n- IVA 19 % verificado:          COP   190.000\n- Total esperado vs. leído:     COP 1.190.000 vs. COP 1.300.000 (+110.000)\n\n2. RECOMENDACIÓN PARA CAUSACIÓN\n- Corregir lectura del total a COP 1.190.000 y ejecutar nueva corrida de validación.`,
       hash: "SHA-256: 6b40e1f9c882...17d4 · Trazabilidad NEPXA 2026",
     },
     "FE-1006": {
-      execId: "ID #CLOUD-LMM-1006",
+      execId: "ID #LMM-1006",
       sources: "DOC-006.pdf · DOC-OC-1006.pdf · DOC-CT-09.pdf · (Acta ausente)",
       kicker: "DICTAMEN ESTRUCTURADO PARA CAUSACIÓN · CONTROL DE SOPORTES",
       title: "Informe de evidencia documental incompleta en Factura FE-1006",
@@ -2599,14 +2599,14 @@
       stampState: "FALTA SOPORTE (D4)",
       stampConf: "7 reglas OK · 1 no evaluada",
       summaryTone: "warning",
-      summaryHeading: "Síntesis del modelo para la causación contable",
+      summaryHeading: "Resumen para la causación contable",
       summaryCopy:
         'La factura <span class="lmm-tag">FE-1006</span> por servicios de adecuación técnica (subtotal <span class="lmm-num">COP 3.571.429</span>, total con IVA <span class="lmm-num">COP 4.250.000</span>) concilia en valor y proveedor con la Orden de Compra <span class="lmm-tag">OC-1006</span> y el contrato <span class="lmm-tag">CT-09</span>. No obstante, el contrato exige acta de entrega firmada para autorizar la causación y dicho documento no figura en el expediente. El soporte se marca honestamente como <span class="lmm-tag">NO EVALUADO</span>.',
       triggerLabel: "Consultar dictamen de soportes y OC en LMM",
       readyTitle: "Análisis IA listo · FE-1006",
       readySub: "Revisión completada y disponible",
       streamSteps: [
-        "Agente LMM Cloud · Inspeccionando inventario documental de FE-1006...",
+        "Inspeccionando inventario documental de FE-1006...",
         "Verificando cláusula de recepción en OC-1006 y contrato CT-09...",
         "Estructurando reporte de evidencia faltante...",
       ],
@@ -2644,11 +2644,11 @@
           copy: 'El revisor o aprobador debe vincular el archivo del acta firmada desde Revisiones para que la validación pase a estado <span class="lmm-tag">Correcta</span>.',
         },
       ],
-      plainText: `[REPORTE CLOUD LMM · SOLO LECTURA]\nEXPEDIENTE: INV-006 / FACTURA: FE-1006\nPROVEEDOR: Ingeniería y Montajes del Valle S.A.S. (NIT 900654987-2)\n\n1. ESTADO DE VALIDACIONES\n- Importes e IVA: CORRECTOS (Total COP 4.250.000)\n- Cruces comerciales: CORRECTOS (Coincide con OC-1006 y CT-09)\n- Soporte de recepción: NO EVALUADO (Falta acta de recepción técnica en el expediente)\n\n2. CRITERIO DE CAUSACIÓN\n- Se mantiene en estado EXCEPCIÓN hasta adjuntar el soporte obligatorio.`,
+      plainText: `[REPORTE LMM DE EJEMPLO · SOLO LECTURA]\nEXPEDIENTE: INV-006 / FACTURA: FE-1006\nPROVEEDOR: Ingeniería y Montajes del Valle S.A.S. (NIT 900654987-2)\n\n1. ESTADO DE VALIDACIONES\n- Importes e IVA: CORRECTOS (Total COP 4.250.000)\n- Cruces comerciales: CORRECTOS (Coincide con OC-1006 y CT-09)\n- Soporte de recepción: NO EVALUADO (Falta acta de recepción técnica en el expediente)\n\n2. CRITERIO DE CAUSACIÓN\n- Se mantiene en estado EXCEPCIÓN hasta adjuntar el soporte obligatorio.`,
       hash: "SHA-256: 9d02f8a1e553...44c8 · Trazabilidad NEPXA 2026",
     },
     "FE-1011": {
-      execId: "ID #CLOUD-LMM-1011",
+      execId: "ID #LMM-1011",
       sources: "DOC-011.pdf · DOC-OC-1011.pdf · DOC-CT-11.pdf · DOC-AUT-01.pdf",
       kicker: "DICTAMEN ESTRUCTURADO PARA CAUSACIÓN · EXCEPCIÓN AUTORIZADA",
       title:
@@ -2658,14 +2658,14 @@
       stampState: "AUTORIZADA CON SOPORTE",
       stampConf: "Diferencia justificada · Tol. ≤ $1",
       summaryTone: "success",
-      summaryHeading: "Síntesis del modelo para la causación contable",
+      summaryHeading: "Resumen para la causación contable",
       summaryCopy:
         'La factura <span class="lmm-tag">FE-1011</span> (subtotal <span class="lmm-num">COP 10.000.000</span>) superó inicialmente la Orden de Compra <span class="lmm-tag">OC-1011</span> (<span class="lmm-num">COP 9.500.000</span>) en <span class="lmm-num">+COP 500.000</span>. Una persona con rol autorizado anexó la adenda firmada <span class="lmm-tag">DOC-AUT-01</span> y registró la justificación comercial. El sistema conserva intacto el hallazgo original para auditoría y habilita la propuesta en la cuenta <span class="lmm-tag">5135 / CC-04</span>.',
       triggerLabel: "Ver trazabilidad de adenda y OC en Visor LMM",
       readyTitle: "Análisis IA listo · FE-1011",
       readySub: "Revisión completada y disponible",
       streamSteps: [
-        "Agente LMM Cloud · Verificando hallazgo histórico y adenda DOC-AUT-01...",
+        "Verificando hallazgo histórico y adenda DOC-AUT-01...",
         "Comprobando tolerancia de redondeo de $0,50 (Escenario E13)...",
         "Compilando dictamen de trazabilidad completa en Visor LMM...",
       ],
@@ -2703,11 +2703,11 @@
           copy: 'Con el soporte <span class="lmm-tag">DOC-AUT-01</span> vinculado, la propuesta por base de <span class="lmm-num">COP 10.000.000</span> en la cuenta <span class="lmm-tag">5135 (Licencias y nube) / CC-04</span> queda lista para cierre.',
         },
       ],
-      plainText: `[REPORTE CLOUD LMM · SOLO LECTURA]\nEXPEDIENTE: INV-011 / FACTURA: FE-1011\nPROVEEDOR: Tecnología y Nube Empresarial S.A.S. (NIT 900789123-1)\n\n1. TRAZABILIDAD DE EXCEPCIÓN (ESCENARIO E11)\n- Hallazgo original:   Factura COP 10.000.000 vs. OC inicial COP 9.500.000 (+500.000)\n- Soporte anexado:     DOC-AUT-01 (Adenda contractual firmada)\n- Redondeo aritmético: Diferencia de COP 0,50 aceptada por tolerancia <= 1 COP\n\n2. ESTADO PARA CAUSACIÓN\n- Estado actual: PROPUESTA (Habilitada con autorización auditable en cuenta 5135 / CC-04).`,
+      plainText: `[REPORTE LMM DE EJEMPLO · SOLO LECTURA]\nEXPEDIENTE: INV-011 / FACTURA: FE-1011\nPROVEEDOR: Tecnología y Nube Empresarial S.A.S. (NIT 900789123-1)\n\n1. TRAZABILIDAD DE EXCEPCIÓN (ESCENARIO E11)\n- Hallazgo original:   Factura COP 10.000.000 vs. OC inicial COP 9.500.000 (+500.000)\n- Soporte anexado:     DOC-AUT-01 (Adenda contractual firmada)\n- Redondeo aritmético: Diferencia de COP 0,50 aceptada por tolerancia <= 1 COP\n\n2. ESTADO PARA CAUSACIÓN\n- Estado actual: PROPUESTA (Habilitada con autorización auditable en cuenta 5135 / CC-04).`,
       hash: "SHA-256: 7a11c9e0b342...88f1 · Trazabilidad NEPXA 2026",
     },
     "FE-1004": {
-      execId: "ID #CLOUD-LMM-1004",
+      execId: "ID #LMM-1004",
       sources:
         "DOC-004.pdf · Índice Histórico NIT+Prefijo+Número · DOC-OC-1004.pdf",
       kicker: "DICTAMEN ESTRUCTURADO PARA CAUSACIÓN · CONTROL DE DUPLICIDAD",
@@ -2718,14 +2718,14 @@
       stampState: "RECHAZADA (DUPLICADA)",
       stampConf: "Bloqueo preventivo activo",
       summaryTone: "warning",
-      summaryHeading: "Síntesis del modelo para la causación contable",
+      summaryHeading: "Resumen para la causación contable",
       summaryCopy:
         'El archivo <span class="lmm-tag">DOC-004</span> corresponde a un segundo intento de registro para la combinación exacta de NIT <span class="lmm-tag">900321654</span>, prefijo <span class="lmm-tag">FE</span> y número <span class="lmm-tag">1004</span> por <span class="lmm-num">COP 2.380.000</span>. El control de duplicidad bloquea automáticamente una nueva propuesta de causación para impedir un doble pago, manteniendo intacto el expediente original donde ya reposan la orden <span class="lmm-tag">OC-1004</span> y sus soportes.',
       triggerLabel: "Ver huella de duplicidad en Visor LMM",
       readyTitle: "Análisis IA listo · FE-1004",
       readySub: "Revisión completada y disponible",
       streamSteps: [
-        "Agente LMM Cloud · Consultando índice histórico de claves únicas...",
+        "Consultando índice histórico de claves únicas...",
         "Detectada coincidencia exacta para NIT 900321654 + FE + 1004...",
         "Generando informe de bloqueo preventivo en Visor LMM...",
       ],
@@ -2762,7 +2762,7 @@
           copy: "Al confirmarse la duplicidad, el motor omite la generación de propuesta en el catálogo de cuentas y deja constancia auditable del bloqueo.",
         },
       ],
-      plainText: `[REPORTE CLOUD LMM · SOLO LECTURA]\nEXPEDIENTE: INV-004 / FACTURA: FE-1004\nPROVEEDOR: Logística y Transporte Nacional S.A.S. (NIT 900321654)\n\n1. CONTROL DE DUPLICIDAD\n- Clave detectada: NIT 900321654 + Prefijo FE + Número 1004\n- Estado en base histórica: YA REGISTRADA EN EXPEDIENTE ORIG-1004\n- Dígito de verificación: NO EVALUADO (No impreso en el documento)\n\n2. DICTAMEN\n- Se rechaza este segundo intento de procesamiento para evitar doble causación por COP 2.380.000.`,
+      plainText: `[REPORTE LMM DE EJEMPLO · SOLO LECTURA]\nEXPEDIENTE: INV-004 / FACTURA: FE-1004\nPROVEEDOR: Logística y Transporte Nacional S.A.S. (NIT 900321654)\n\n1. CONTROL DE DUPLICIDAD\n- Clave detectada: NIT 900321654 + Prefijo FE + Número 1004\n- Estado en base histórica: YA REGISTRADA EN EXPEDIENTE ORIG-1004\n- Dígito de verificación: NO EVALUADO (No impreso en el documento)\n\n2. DICTAMEN\n- Se rechaza este segundo intento de procesamiento para evitar doble causación por COP 2.380.000.`,
       hash: "SHA-256: 5e82d0c3f119...60b2 · Trazabilidad NEPXA 2026",
     },
   };
@@ -3212,11 +3212,29 @@
     );
   };
 
+  const responseOrigin = (data) => {
+    const origin = String(data?.proposal?.generated_by || "").toUpperCase();
+    if (origin === "CLAUDE") return { label: "RESPUESTA DE CLAUDE", name: "Claude", isClaude: true };
+    if (origin === "TEMPLATE") return { label: "RESPUESTA POR PLANTILLA", name: "plantilla", isClaude: false };
+    return { label: "RESPUESTA DEL SISTEMA", name: "sistema", isClaude: false };
+  };
+
   const renderLmmViewer = (caseId, withSpinner = false) => {
     const data = cases[caseId];
     const lmm = data?.lmm || lmmResponses[caseId];
     if (!data || !lmm) return;
-    if (!data || !lmm) return;
+
+    const origin = responseOrigin(data);
+    const originLabel = $("[data-lmm-origin-label]");
+    if (originLabel) originLabel.textContent = origin.label;
+    const originBadge = $("[data-lmm-origin-badge]");
+    if (originBadge) {
+      originBadge.setAttribute("aria-label", origin.label);
+      const mark = $(".claude-mark", originBadge);
+      if (mark) mark.style.display = origin.isClaude ? "" : "none";
+    }
+    const originFooter = $("[data-lmm-origin-footer]");
+    if (originFooter) originFooter.textContent = `Respuesta generada por ${origin.name} · Vista de lectura sin edición`;
 
     $$("[data-lmm-case]").forEach((btn) => {
       const selected = btn.dataset.lmmCase === caseId;
@@ -3307,7 +3325,7 @@
               </dl>
             </article>
           `).join("")
-        : `<div class="lmm-empty-context">No hay excepciones detalladas reportadas.</div>`;
+        : `<div class="lmm-empty-context">No hay detalles de excepciones disponibles para esta factura.</div>`;
     }
     setText("[data-lmm-exception-count]", `${exceptionItems.length} ${exceptionItems.length === 1 ? "hallazgo" : "hallazgos"}`);
 
@@ -3365,7 +3383,7 @@
       sheet.hidden = true;
       if ($("[data-lmm-skeleton-title]")) {
         $("[data-lmm-skeleton-title]").textContent =
-          `Cargando lectura de ${caseId} desde Cloud LMM...`;
+          `Cargando respuesta de ${data.invoice || caseId}...`;
       }
       lmmSkeletonTimer = window.setTimeout(() => {
         skeleton.hidden = true;
@@ -3407,8 +3425,15 @@
     if (!lmm) return;
     if ($("[data-lmm-trigger-label]"))
       $("[data-lmm-trigger-label]").textContent = lmm.triggerLabel;
+    const origin = responseOrigin(cases[caseId]);
     if ($("[data-lmm-ready-title]"))
-      $("[data-lmm-ready-title]").textContent = "RESPUESTA DE CLAUDE";
+      $("[data-lmm-ready-title]").textContent = origin.label;
+    const button = $("[data-lmm-ready-banner] [data-open-lmm-viewer]");
+    if (button) {
+      button.setAttribute("aria-label", `Abrir ${origin.label.toLowerCase()} en el visor`);
+      const mark = $(".claude-mark", button);
+      if (mark) mark.style.display = origin.isClaude ? "" : "none";
+    }
     if ($("[data-lmm-ready-sub]"))
       $("[data-lmm-ready-sub]").textContent = lmm.readySub;
     runInlineLmmStream(caseId, false);
@@ -3435,7 +3460,7 @@
     readyBanner.hidden = true;
     streamBox.hidden = false;
     if (streamTitle)
-      streamTitle.textContent = `Agente LMM Cloud · Procesando ${caseId}...`;
+      streamTitle.textContent = `Preparando respuesta de ${cases[caseId]?.invoice || caseId}...`;
     if (streamStep) streamStep.textContent = lmm.streamSteps[0];
     if (streamBar) streamBar.style.width = "28%";
 
@@ -3474,7 +3499,7 @@
           }
           if (showToastOnFinish) {
             toast(
-              `Respuesta de Cloud LMM lista para ${caseId}. Haz clic en «Ver en Visor LMM →».`,
+              `Respuesta lista para ${cases[caseId]?.invoice || caseId}. Haz clic en «Ver en Visor LMM →».`,
             );
           }
         }, 440);
@@ -4396,9 +4421,9 @@
       },
       "visor-lmm": {
         section: "Operación",
-        kicker: "Visor de respuestas Cloud LMM",
+        kicker: "Visor de respuestas",
         title: "Visor LMM",
-        desc: "Lectura editorial simplificada de los dictámenes de Cloud LMM para la causación contable.",
+        desc: "Consulta las respuestas para la causación contable, generadas por Claude o mediante plantillas.",
       },
       reglas: {
         section: "Operación",
