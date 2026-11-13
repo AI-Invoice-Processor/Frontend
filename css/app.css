@@ -5274,6 +5274,75 @@ h2,
   letter-spacing: 0.002em;
 }
 
+/* Respuestas largas del backend: campos y acciones legibles, no párrafos corridos. */
+.lmm-structured-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 18px;
+  margin: 2px 0 0;
+}
+.lmm-structured-fields div {
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid #e4ebf1;
+  border-radius: 9px;
+  background: #f8fafc;
+}
+.lmm-structured-fields dt {
+  color: #718397;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.lmm-structured-fields dd {
+  margin: 4px 0 0;
+  overflow-wrap: anywhere;
+  color: #20364d;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.lmm-action-list {
+  display: grid;
+  gap: 12px;
+  margin: 10px 0 0;
+  padding-left: 22px;
+  color: #33475b;
+}
+.lmm-action-list > li {
+  padding-left: 4px;
+  line-height: 1.6;
+}
+.lmm-action-list > li::marker {
+  color: var(--blue);
+  font-weight: 800;
+}
+.lmm-action-list strong {
+  color: #0d2138;
+  font-size: 13.5px;
+}
+.lmm-action-list ul {
+  display: grid;
+  gap: 6px;
+  margin: 7px 0 0;
+  padding-left: 18px;
+}
+.lmm-action-list ul li {
+  padding-left: 3px;
+  font-size: 13.5px;
+  line-height: 1.65;
+}
+.lmm-action-list ul li::marker {
+  color: #8ca1b3;
+}
+
+@media (max-width: 680px) {
+  .lmm-structured-fields {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
 /* Resaltadores tipográficos inline limpios y continuos (sin efecto de código ni cajas) */
 .lmm-num {
   font-family: inherit;

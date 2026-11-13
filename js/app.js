@@ -1288,9 +1288,153 @@
       .join(" ");
   };
 
+  const escapeRegExp = (value) => String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
   const backendTextLabel = (value) => Object.entries(BACKEND_STATUS_LABELS)
     .sort(([left], [right]) => right.length - left.length)
-    .reduce((text, [raw, label]) => text.split(raw).join(label), String(value ?? ""));
+    .reduce((text, [raw, label]) => text.replace(new RegExp(`\\b${escapeRegExp(raw)}\\b`, "g"), label), String(value ?? ""));
+
+  const normalizeLmmResponseText = (value) => String(value ?? "")
+    .replace(/\\r\\n/g, "\n")
+    .replace(/\\n/g, "\n")
+    .replace(/\r\n?/g, "\n")
+    .replace(/\\(?=\s*(?:\*\*)?Recomendación)/gi, "")
+    .replace(/\\\s*(?=\n)/g, "")
+    .replace(/[ \t]+\n/g, "\n")
+    .trim();
+
+  const cleanLmmResponseText = (value) => normalizeLmmResponseText(value)
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/^\s*[-•]\s*/, "")
+    .trim();
+
+  const parseLmmResponseSections = (value) => {
+    const source = normalizeLmmResponseText(value)
+      .replace(/\s+(?=(?:DOCUMENTOS INVOLUCRADOS|VALORES FACTURADOS|EXCEPCIONES DETECTADAS|EVALUACIÓN DE RIESGO INTEGRAL(?:\s*\(JEV\))?|\*\*?RECOMENDACIÓN\*\*?|NOTA IMPORTANTE)\s*:?\s*)/gi, "\n");
+    const headingPattern = /(?:^|\n)\s*(DOCUMENTOS INVOLUCRADOS|VALORES FACTURADOS|EXCEPCIONES DETECTADAS|EVALUACIÓN DE RIESGO INTEGRAL(?:\s*\(JEV\))?|\*\*?RECOMENDACIÓN\*\*?|NOTA IMPORTANTE)\s*:?\s*/gi;
+    const matches = [...source.matchAll(headingPattern)];
+    const sections = {};
+
+    matches.forEach((match, index) => {
+      const key = cleanLmmResponseText(match[1]).toLowerCase();
+      const canonicalKey = key.startsWith("documentos")
+        ? "documents"
+        : key.startsWith("valores")
+          ? "values"
+          : key.startsWith("excepciones")
+            ? "exceptions"
+            : key.startsWith("evaluación")
+              ? "risk"
+              : key.startsWith("recomendación")
+                ? "recommendation"
+                : "note";
+      const start = match.index + match[0].length;
+      const end = index + 1 < matches.length ? matches[index + 1].index : source.length;
+      sections[canonicalKey] = source.slice(start, end).trim();
+    });
+
+    const fieldValue = (section, label, nextLabels = []) => {
+      if (!section) return "";
+      const next = nextLabels.length ? `(?=\\s*(?:\\||-)\\s*(?:${nextLabels.join("|")})\\s*:)` : "";
+      const expression = nextLabels.length
+        ? new RegExp(`${label}\\s*:\\s*(.*?)${next}`, "i")
+        : new RegExp(`${label}\\s*:\\s*(.*)$`, "i");
+      return cleanLmmResponseText(section.match(expression)?.[1] || "");
+    };
+
+    const documents = [
+      ["Factura electrónica", fieldValue(sections.documents, "Factura Electrónica", ["Proveedor"])],
+      ["Proveedor", fieldValue(sections.documents, "Proveedor", ["Orden de Compra de Referencia"])],
+      ["Orden de compra", fieldValue(sections.documents, "Orden de Compra de Referencia", ["Contrato de Referencia"])],
+      ["Contrato", fieldValue(sections.documents, "Contrato de Referencia", ["Documento Soporte"])],
+      ["Documento soporte", fieldValue(sections.documents, "Documento Soporte", ["Monto"])],
+      ["Monto", fieldValue(sections.documents, "Monto")],
+    ].filter(([, value]) => value);
+
+    const values = [
+      ["Subtotal", fieldValue(sections.values, "Subtotal \\(Base gravable\\)", ["IVA / Impuestos facturados"])],
+      ["IVA / impuestos", fieldValue(sections.values, "IVA / Impuestos facturados", ["Total factura"])],
+      ["Total factura", fieldValue(sections.values, "Total factura", ["Moneda"])],
+      ["Moneda", fieldValue(sections.values, "Moneda")],
+    ].filter(([, value]) => value);
+
+    const exceptionPattern = /(?:^|\s)(?:[①②③④⑤⑥⑦⑧⑨⑩]\s*)?EXCEPCIÓN\s+(\d+)\s*[—–-]\s*(.*?)(?=(?:\s+[①②③④⑤⑥⑦⑧⑨⑩]?\s*)?EXCEPCIÓN\s+\d+\s*[—–-]|$)/gis;
+    const exceptions = [...(sections.exceptions || "").matchAll(exceptionPattern)].map((match) => {
+      const full = cleanLmmResponseText(match[2]);
+      const separatorIndex = full.indexOf(":");
+      const heading = separatorIndex >= 0 ? full.slice(0, separatorIndex).trim() : full;
+      const message = separatorIndex >= 0 ? full.slice(separatorIndex + 1).trim() : "Sin detalle reportado.";
+      const difference = message.match(/Diferencia cuantificada\s*:\s*([^.;]+)/i)?.[1] || "No determinada";
+      return {
+        type: `Excepción ${match[1]} · ${heading.replace(/\([^)]*\)/g, "").trim()}`,
+        severity: heading.match(/\(([^)]+)\)/)?.[1] || "Requiere revisión",
+        message: message.replace(/\s*Diferencia cuantificada\s*:\s*[^.;]+[.;]?/i, "").trim(),
+        expected: "No reportado",
+        actual: "No reportado",
+        difference,
+        status: "Requiere revisión",
+      };
+    });
+
+    const riskSection = sections.risk || "";
+    const scoreMatch = riskSection.match(/Score de riesgo\s*:\s*([\d,.]+)\s*\/\s*([\d,.]+)/i);
+    const confidenceMatch = riskSection.match(/Confianza(?: del motor de validación)?\s*:\s*([\d,.]+)\s*%/i);
+    const parseDecimal = (value) => Number.parseFloat(String(value || "").replace(",", "."));
+    const scoreValue = scoreMatch ? parseDecimal(scoreMatch[1]) / Math.max(parseDecimal(scoreMatch[2]), 1) : null;
+    const confidenceValue = confidenceMatch ? parseDecimal(confidenceMatch[1]) / 100 : null;
+    const risk = {
+      level: riskSection.match(/Nivel de riesgo\s*:\s*([^\n-]+)/i)?.[1]?.trim() || "",
+      score: scoreMatch ? `${scoreMatch[1]} / ${scoreMatch[2]}` : "",
+      scoreValue: Number.isFinite(scoreValue) ? scoreValue : null,
+      confidence: confidenceMatch ? `${confidenceMatch[1]}%` : "",
+      confidenceValue: Number.isFinite(confidenceValue) ? confidenceValue : null,
+      humanReview: riskSection.match(/Requiere revisión humana obligatoria\s*:\s*([^\n-]+)/i)?.[1]?.trim() || "",
+      category: riskSection.match(/Categoría de excepción final\s*:\s*(.*)$/i)?.[1]?.trim() || "",
+    };
+
+    const recommendationSection = sections.recommendation || "";
+    const actionPattern = /(?:^|\s)(\d+)\.\s+([^:]{3,140}):\s*(.*?)(?=\s+\d+\.\s+[^:]{3,140}:|$)/gs;
+    const actions = [...recommendationSection.matchAll(actionPattern)].map((match) => {
+      const body = cleanLmmResponseText(match[3]);
+      const bullets = body
+        .replace(/^\s*[-•]\s*/, "")
+        .split(/\s+-\s+(?=[A-ZÁÉÍÓÚÑÜ])/)
+        .map((item) => cleanLmmResponseText(item))
+        .filter(Boolean);
+      return {
+        number: match[1],
+        title: cleanLmmResponseText(match[2]),
+        bullets,
+      };
+    });
+    const recommendationIntro = cleanLmmResponseText(
+      actions.length ? recommendationSection.slice(0, recommendationSection.indexOf(`${actions[0].number}.`)) : recommendationSection,
+    );
+
+    return {
+      isStructured: Boolean(documents.length || values.length || exceptions.length || sections.risk || actions.length || sections.note),
+      documents,
+      values,
+      exceptions,
+      risk,
+      recommendationIntro,
+      actions,
+      note: cleanLmmResponseText(sections.note || ""),
+      summary: exceptions.length
+        ? exceptions.length === 1
+          ? "Se identificó 1 excepción que requiere revisión humana."
+          : `Se identificaron ${exceptions.length} excepciones que requieren revisión humana.`
+        : "Respuesta estructurada recibida del motor de validación.",
+    };
+  };
+
+  const structuredFieldsHtml = (items) => `<dl class="lmm-structured-fields">${items.map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`).join("")}</dl>`;
+
+  const structuredActionsHtml = (structured) => {
+    const intro = structured.recommendationIntro ? `<p>${escapeHtml(structured.recommendationIntro)}</p>` : "";
+    const actions = structured.actions.map((action) => `<li><strong>${escapeHtml(`${action.number}. ${action.title}`)}</strong>${action.bullets.length ? `<ul>${action.bullets.map((bullet) => `<li>${escapeHtml(bullet)}</li>`).join("")}</ul>` : ""}</li>`).join("");
+    return `${intro}${actions ? `<ol class="lmm-action-list">${actions}</ol>` : ""}`;
+  };
 
   const documentCategoryLabel = (category) => ({
     invoice: "Factura",
@@ -1542,10 +1686,15 @@
     ]);
     const failed = checks.filter((check) => check.result !== "passed");
     const tone = failed.length ? "warning" : "success";
-    const summary = backendTextLabel(explanation.summary || (failed.length
-      ? `El expediente ${caseData.invoice} tiene ${failed.length} control(es) que requieren revisión humana.`
-      : `El expediente ${caseData.invoice} no presenta excepciones abiertas en las validaciones recibidas.`));
     const rawDetail = backendTextLabel(explanation.details || checks.map((check) => `${check.rule_id}: ${check.reason || backendStatusLabel(check.result)}`).join(" · "));
+    const legacyRecommendation = "Solicitar revisión documental al área solicitante o nota crédito al proveedor antes de proceder con la causación contable.";
+    const rawRecommendation = backendTextLabel(explanation.recommendation || "La decisión final permanece en la revisión humana según el estado de la propuesta.");
+    const structured = parseLmmResponseSections(`${rawDetail}\n${rawRecommendation}`);
+    const summary = structured.isStructured
+      ? structured.summary
+      : backendTextLabel(explanation.summary || (failed.length
+        ? `El expediente ${caseData.invoice} tiene ${failed.length} control(es) que requieren revisión humana.`
+        : `El expediente ${caseData.invoice} no presenta excepciones abiertas en las validaciones recibidas.`));
     const legacyCount = rawDetail.match(/^Se detectaron (\d+) inconsistencia\(s\) técnica\(s\)\./);
     const firstExpected = caseData.exceptions?.[0]?.expected;
     const hasExpected = firstExpected !== null && firstExpected !== undefined
@@ -1553,11 +1702,11 @@
     const expectedDescription = hasExpected
       ? `El valor esperado registrado para la primera excepción es ${Number.isFinite(Number(firstExpected)) ? `${amountText(firstExpected)} COP` : String(firstExpected)}.`
       : "No se reportó un valor esperado para la primera excepción.";
-    const detail = legacyCount
+    const detail = structured.isStructured
+      ? `${structured.summary} El expediente corresponde a ${caseData.invoice}.`
+      : legacyCount
       ? `Se ${Number(legacyCount[1]) === 1 ? "detectó" : "detectaron"} ${legacyCount[1]} ${Number(legacyCount[1]) === 1 ? "inconsistencia técnica" : "inconsistencias técnicas"}. El total facturado es de ${amountText(invoice.total)} COP. ${expectedDescription} El nivel de riesgo es ${backendStatusLabel(String(caseData.risk?.level || "no reportado").toUpperCase()).toLowerCase()}.`
       : rawDetail;
-    const legacyRecommendation = "Solicitar revisión documental al área solicitante o nota crédito al proveedor antes de proceder con la causación contable.";
-    const rawRecommendation = backendTextLabel(explanation.recommendation || "La decisión final permanece en la revisión humana según el estado de la propuesta.");
     const recommendation = legacyCount && rawRecommendation === legacyRecommendation
       ? "Solicitar al área solicitante los soportes necesarios para revisar las inconsistencias. Si se confirma una diferencia en el valor cobrado, pedir al proveedor la nota crédito correspondiente antes de continuar con la causación contable."
       : rawRecommendation;
@@ -1565,8 +1714,16 @@
     const costCenter = proposal?.accounting_proposal?.cost_center_code || "—";
     const proposalValues = proposal?.accounting_proposal || {};
     const risk = caseData.risk || {};
+    const parsedRisk = structured.risk || {};
+    const valueOrFallback = (value, fallback) => value !== null && value !== undefined && String(value).trim() ? value : fallback;
+    const riskLevel = valueOrFallback(risk.level, parsedRisk.level);
+    const riskScore = valueOrFallback(risk.score, parsedRisk.scoreValue);
+    const riskScoreText = valueOrFallback(risk.score, parsedRisk.score);
+    const riskConfidence = valueOrFallback(risk.confidence, parsedRisk.confidenceValue);
+    const riskConfidenceText = valueOrFallback(risk.confidence, parsedRisk.confidence);
     const checksByRule = new Map(checks.map((check) => [check.rule_id, check]));
-    const exceptionItems = (caseData.exceptions || []).map((exception) => {
+    const exceptionItems = (caseData.exceptions || []).length
+      ? caseData.exceptions.map((exception) => {
       const check = checksByRule.get(exception.type) || {};
       return {
         type: backendStatusLabel(exception.type || "Excepción"),
@@ -1577,7 +1734,27 @@
         difference: backendValueText(null, check.difference),
         status: backendStatusLabel(exception.resolution_status || (exception.requires_review ? "OPEN" : "Sin estado")),
       };
-    });
+      })
+      : structured.exceptions;
+    const blocks = structured.isStructured
+      ? [
+        structured.documents.length
+          ? { title: "Documentos involucrados", html: structuredFieldsHtml(structured.documents) }
+          : null,
+        structured.values.length
+          ? { title: "Valores facturados", html: structuredFieldsHtml(structured.values) }
+          : null,
+        structured.actions.length || structured.recommendationIntro
+          ? { title: "Recomendación", html: structuredActionsHtml(structured) }
+          : null,
+        structured.note
+          ? { title: "Nota importante", html: `<p>${escapeHtml(structured.note)}</p>` }
+          : null,
+      ].filter(Boolean)
+      : [
+        { title: "Hallazgos de la revisión", copy: escapeHtml(detail || "Sin detalle reportado.") },
+        { title: "Recomendación", copy: escapeHtml(recommendation) },
+      ];
     return {
       execId: `EXPEDIENTE ${caseData.invoiceId}`,
       sources: caseData.apiDocuments.length
@@ -1606,18 +1783,15 @@
       ],
       tableCaption: "Resultado de reglas deterministas recibido desde Etapa 4",
       rows,
-      blocks: [
-        { title: "Hallazgos de la revisión", copy: escapeHtml(detail || "Sin detalle reportado.") },
-        { title: "Recomendación", copy: escapeHtml(recommendation) },
-      ],
+      blocks,
       operational: {
         risk: {
-          level: backendStatusLabel(String(risk.level || "").toUpperCase()),
-          score: ratioPercent(risk.score),
-          scoreValue: Number.isFinite(Number(risk.score)) ? Math.round(Math.max(0, Math.min(1, Number(risk.score))) * 100) : 0,
-          confidence: ratioPercent(risk.confidence),
-          confidenceValue: Number.isFinite(Number(risk.confidence)) ? Math.round(Math.max(0, Math.min(1, Number(risk.confidence))) * 100) : 0,
-          tone: ["HIGH", "CRITICAL"].includes(String(risk.level || "").toUpperCase()) ? "warning" : "success",
+          level: backendStatusLabel(String(riskLevel || "").toUpperCase()),
+          score: riskScoreText || ratioPercent(riskScore),
+          scoreValue: Number.isFinite(Number(riskScore)) ? Math.round(Math.max(0, Math.min(1, Number(riskScore))) * 100) : 0,
+          confidence: riskConfidenceText || ratioPercent(riskConfidence),
+          confidenceValue: Number.isFinite(Number(riskConfidence)) ? Math.round(Math.max(0, Math.min(1, Number(riskConfidence))) * 100) : 0,
+          tone: ["HIGH", "CRITICAL", "ALTO", "CRÍTICO"].includes(String(riskLevel || "").toUpperCase()) ? "warning" : "success",
         },
         proposal: {
           status: proposalValues.status ? backendStatusLabel(proposalValues.status) : "Sin propuesta",
@@ -3166,7 +3340,7 @@
           (b, idx) =>
             `<article class="lmm-reading-point">` +
             `<span class="lmm-reading-point__dot" aria-hidden="true">${idx + 1}</span>` +
-            `<div><strong>${b.title}</strong><p>${b.copy}</p></div>` +
+            `<div><strong>${escapeHtml(b.title)}</strong>${b.html || `<p>${b.copy || ""}</p>`}</div>` +
             `</article>`,
         )
         .join("");
