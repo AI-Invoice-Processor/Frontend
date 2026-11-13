@@ -4256,21 +4256,106 @@
     }
   };
 
+  let selectedUploadFiles = [];
+  let uploadInProgress = false;
+  let uploadRows = [];
+  const supportedUploadTypes = new Set(["application/pdf", "image/jpeg", "image/png"]);
+  const maxUploadSize = 10 * 1024 * 1024;
+
+  const uploadFileError = (file) => {
+    if (!supportedUploadTypes.has(file.type)) return "Formato no admitido: usa PDF, JPG o PNG.";
+    if (file.size > maxUploadSize) return "El archivo supera los 10 MB permitidos.";
+    return null;
+  };
+
   const renderFiles = (files) => {
+    if (uploadInProgress) return;
     const list = $("[data-file-list]");
     const process = $("[data-process-files]");
     if (!list || !process) return;
     list.innerHTML = "";
-    const selected = [...files];
-    list.hidden = selected.length === 0;
-    process.disabled = selected.length === 0;
-    selected.forEach((file) => {
+    selectedUploadFiles = [...files];
+    uploadRows = [];
+    list.hidden = selectedUploadFiles.length === 0;
+    process.disabled = selectedUploadFiles.length === 0;
+    selectedUploadFiles.forEach((file, index) => {
       const row = d.createElement("div");
       row.className = "file-row";
       row.innerHTML = `<span><strong></strong> <small>${Math.max(1, Math.round(file.size / 1024))} KB · Listo para lectura</small></span><span>Válido</span>`;
       $("strong", row).textContent = file.name;
       list.appendChild(row);
+      uploadRows.push(row);
+      const error = uploadFileError(file);
+      if (error) updateUploadFileStatus(index, "error", error);
     });
+  };
+
+  const updateUploadFileStatus = (index, status, message) => {
+    const row = uploadRows[index];
+    if (!row) return;
+    row.dataset.status = status;
+    $("small", row).textContent = message;
+    row.lastElementChild.textContent = {
+      processing: "Procesando…",
+      success: "Completado",
+      error: "Error",
+    }[status];
+  };
+
+  const makeUploadBatchId = () => {
+    const bytes = window.crypto.getRandomValues(new Uint8Array(16));
+    bytes[6] = (bytes[6] & 0x0f) | 0x40;
+    bytes[8] = (bytes[8] & 0x3f) | 0x80;
+    const hex = [...bytes].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+    return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+  };
+
+  const waitForUploadCheck = (ms = 3000) =>
+    new Promise((resolve) => window.setTimeout(resolve, ms));
+
+  const findRegisteredBatchInvoice = async (batchId, fileName, knownIds) => {
+    for (let attempt = 0; attempt < 4; attempt += 1) {
+      try {
+        const response = await window.NepxaApi.listCases({ limit: 500 });
+        const match = response.items?.find((item) =>
+          item.batch_id === batchId
+          && item.file_name === fileName
+          && !knownIds.has(item.invoice_id));
+        if (match) return match;
+      } catch (error) {
+        console.warn("[ai-invoice-processor] No se pudo verificar el lote", error);
+      }
+      if (attempt < 3) await waitForUploadCheck();
+    }
+    return null;
+  };
+
+  const waitForExtraction = async (invoiceId) => {
+    for (let attempt = 0; attempt < 20; attempt += 1) {
+      try {
+        const response = await window.NepxaApi.listCases({ limit: 500 });
+        const invoice = response.items?.find((item) => item.invoice_id === invoiceId);
+        if (invoice?.processing_status === "success") return true;
+        if (invoice?.processing_status === "failed") return false;
+      } catch (error) {
+        console.warn("[ai-invoice-processor] No se pudo consultar la extracción", error);
+      }
+      if (attempt < 19) await waitForUploadCheck();
+    }
+    return false;
+  };
+
+  const findGeneratedProposal = async (invoiceId) => {
+    for (let attempt = 0; attempt < 12; attempt += 1) {
+      try {
+        const detail = await window.NepxaApi.getCase(invoiceId);
+        if (detail?.proposal) return detail;
+      } catch (error) {
+        console.warn("[ai-invoice-processor] No se pudo consultar la propuesta", error);
+      }
+      if (attempt < 11) await waitForUploadCheck();
+    }
+    return null;
   };
 
   const downloadJSON = (kind = "frontend") => {
@@ -4626,9 +4711,10 @@
       );
     });
 
-    $("[data-file-input]")?.addEventListener("change", (event) =>
-      renderFiles(event.target.files),
-    );
+    $("[data-file-input]")?.addEventListener("change", (event) => {
+      renderFiles(event.target.files);
+      event.target.value = "";
+    });
     const dropzone = $("[data-dropzone]");
     if (dropzone) {
       ["dragenter", "dragover"].forEach((eventName) =>
@@ -4644,42 +4730,101 @@
         }),
       );
       dropzone.addEventListener("drop", (event) =>
-        renderFiles(event.dataTransfer.files),
+        renderFiles(event.dataTransfer?.files || []),
       );
     }
-    $("[data-process-files]")?.addEventListener("click", () => {
-      const files = $("[data-file-input]")?.files;
-      const firstName = files?.[0]?.name || "factura_nueva.pdf";
-      if (window.NepxaApi && files?.[0]) {
-        const processButton = $("[data-process-files]");
-        if (processButton) processButton.disabled = true;
-        window.NepxaApi.uploadInvoice(files[0])
-          .then(async (result) => {
-            const detail = await window.NepxaApi.processCase(result.invoice_id);
+    $("[data-process-files]")?.addEventListener("click", async () => {
+      if (uploadInProgress || !selectedUploadFiles.length) return;
+      if (!window.NepxaApi) {
+        toast("No se pudo conectar al backend; los documentos no se registraron.");
+        return;
+      }
+
+      const files = [...selectedUploadFiles];
+      const batchId = makeUploadBatchId();
+      const knownInvoiceIds = new Set();
+      const processButton = $("[data-process-files]");
+      const fileInput = $("[data-file-input]");
+      uploadInProgress = true;
+      processButton.disabled = true;
+      if (fileInput) fileInput.disabled = true;
+      let completed = 0;
+      let lastCaseId = null;
+
+      try {
+        for (const [index, file] of files.entries()) {
+          if (uploadFileError(file)) continue;
+          updateUploadFileStatus(index, "processing", `${index + 1} de ${files.length} · Registrando`);
+          let registeredInvoiceId = null;
+          try {
+            try {
+              const result = await window.NepxaApi.uploadInvoice(file, batchId);
+              registeredInvoiceId = result.invoice_id;
+              knownInvoiceIds.add(registeredInvoiceId);
+            } catch {
+              updateUploadFileStatus(index, "processing", "Verificando si quedó registrada…");
+              const recovered = await findRegisteredBatchInvoice(batchId, file.name, knownInvoiceIds);
+              if (!recovered) {
+                throw new Error("No se pudo confirmar el registro; revisa la cola antes de volver a subirla.");
+              }
+              registeredInvoiceId = recovered.invoice_id;
+              knownInvoiceIds.add(registeredInvoiceId);
+              updateUploadFileStatus(index, "processing", "Registrada · esperando extracción…");
+              if (!await waitForExtraction(registeredInvoiceId)) {
+                throw new Error("La extracción sigue pendiente o falló; revisa el expediente en la cola.");
+              }
+            }
+            updateUploadFileStatus(index, "processing", `${index + 1} de ${files.length} · Validando`);
+            let detail;
+            try {
+              detail = await window.NepxaApi.processCase(registeredInvoiceId);
+            } catch {
+              updateUploadFileStatus(index, "processing", "Verificando si la propuesta quedó generada…");
+              detail = await findGeneratedProposal(registeredInvoiceId);
+              if (!detail) {
+                throw new Error("No se confirmó la propuesta; revisa el expediente antes de reintentar.");
+              }
+            }
             const invoice = detail.invoice;
             const caseId = invoice.number
               ? `${invoice.prefix ? `${invoice.prefix}-` : ""}${invoice.number}`
-              : result.invoice_id;
+              : registeredInvoiceId;
             hydrateCaseFromApi(caseId, detail);
-            window.NepxaApi.getSummary()
-              .then(hydrateSummaryFromApi)
-              .catch(() => hydrateInventoryFromBackend());
+            lastCaseId = caseId;
+            completed += 1;
+            updateUploadFileStatus(index, "success", `Expediente ${caseId} registrado y validado`);
             renderBackendQueue();
             renderBackendDocuments();
             renderBackendLmmHistory();
             renderBackendTreeCases();
-            closeAllModals();
             setActiveCase(caseId);
             applyQueueFilters();
-            toast(`Expediente ${caseId} cargado en el Backend.`);
-          })
-          .catch((error) => toast(error.message || "No se pudo cargar el documento."))
-          .finally(() => {
-            if (processButton) processButton.disabled = false;
-          });
-        return;
+          } catch (error) {
+            const message = error.message || "No se pudo procesar este archivo.";
+            updateUploadFileStatus(
+              index,
+              "error",
+              registeredInvoiceId ? `Registrada; validación pendiente: ${message}` : message,
+            );
+          }
+        }
+        try {
+          hydrateSummaryFromApi(await window.NepxaApi.getSummary());
+        } catch (error) {
+          hydrateInventoryFromBackend();
+        }
+        if (completed === files.length) {
+          closeAllModals();
+          toast(`${completed} de ${files.length} documentos procesados. Último expediente: ${lastCaseId}.`);
+        } else {
+          toast(`${completed} de ${files.length} documentos procesados. Revisa los errores en la lista.`);
+        }
+      } finally {
+        uploadInProgress = false;
+        if (fileInput) fileInput.disabled = false;
+        processButton.disabled = true;
+        if (completed === files.length) renderFiles([]);
       }
-      toast("No se pudo conectar al backend; el documento no se registró.");
     });
 
     $("[data-export]")?.addEventListener("click", () =>

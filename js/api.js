@@ -42,7 +42,7 @@
       return request(`/api/workspace/cases${query.toString() ? `?${query}` : ""}`);
     },
     getSummary: () => request("/api/workspace/summary"),
-    processCase: (invoiceId) => request(`/api/workspace/cases/${encodeURIComponent(invoiceId)}/pipeline`, { method: "POST" }),
+    processCase: (invoiceId) => request(`/api/workspace/cases/${encodeURIComponent(invoiceId)}/pipeline`, { method: "POST", timeout: 180000 }),
     processAll: () => request("/api/workspace/pipeline", { method: "POST", timeout: 120000 }),
     getCase: (invoiceId) => request(`/api/workspace/cases/${encodeURIComponent(invoiceId)}`),
     getDocumentUrl: (invoiceId, documentId) =>
@@ -52,10 +52,11 @@
         method: "POST",
         body: JSON.stringify({ action, ...payload }),
       }),
-    uploadInvoice: (file) => {
+    uploadInvoice: (file, batchId) => {
       const body = new FormData();
       body.append("file", file);
-      return request("/api/invoices", { method: "POST", body });
+      if (batchId) body.append("batch_id", batchId);
+      return request("/api/invoices", { method: "POST", body, timeout: 180000 });
     },
     getProposal: (invoiceId) => request(`/api/invoices/${encodeURIComponent(invoiceId)}/proposals`),
     generateProposal: (invoiceId) => request(`/api/invoices/${encodeURIComponent(invoiceId)}/proposals`, { method: "POST" }),

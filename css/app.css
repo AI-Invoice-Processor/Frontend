@@ -2353,6 +2353,15 @@ h1 {
 .file-row small {
   color: var(--muted);
 }
+.file-row[data-status="processing"] {
+  border-color: var(--steel);
+}
+.file-row[data-status="success"] {
+  border-color: #398873;
+}
+.file-row[data-status="error"] {
+  border-color: #bf594e;
+}
 .modal-actions {
   display: flex;
   justify-content: flex-end;
