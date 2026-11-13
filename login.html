@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Iniciar sesión · AI Invoice Processor</title>
+    <meta
+      name="description"
+      content="Ingresa con tu rol al espacio de revisión documental de AI Invoice Processor."
+    />
+    <meta name="theme-color" content="#10243D" />
+    <link
+      rel="icon"
+      href="AI_Invoice_Processor_Enterprise_Identity_v1/02_Favicon_Avatar/PNG/favicon-transparent.png"
+    />
+    <script>
+      document.documentElement.className =
+        document.documentElement.className.replace("no-js", "js");
+    </script>
+    <link rel="stylesheet" href="/css/landing.css" />
+    <script defer src="/vendor/gsap.min.js"></script>
+    <script defer src="/js/landing.js"></script>
+  </head>
+  <body class="auth-page">
+    <div class="auth-shell">
+      <aside class="auth-aside">
+        <a class="auth-aside__brand" href="landing.html"
+          ><img
+            src="AI_Invoice_Processor_Enterprise_Identity_v1/01_Logos/SVG/logo-horizontal-white-transparent.svg"
+            alt="AI Invoice Processor"
+        /></a>
+        <div class="auth-aside__copy">
+          <p class="eyebrow">
+            <span class="eyebrow__mark"></span> Control por rol
+          </p>
+          <h1>Cada acción exige la persona facultada.</h1>
+          <p>
+            Elige con qué rol deseas entrar a la demostración para probar la
+            corrección de datos, la autorización de diferencias o la aprobación
+            de propuestas.
+          </p>
+        </div>
+        <div class="auth-aside__foot">
+          NEPXA 2026 · Reto 04 · Trazabilidad en tres planos
+        </div>
+      </aside>
+      <main class="auth-main">
+        <section class="auth-card">
+          <div class="auth-card__top">
+            <a href="landing.html"
+              ><img
+                src="AI_Invoice_Processor_Enterprise_Identity_v1/01_Logos/SVG/logo-horizontal-on-white.svg"
+                alt="AI Invoice Processor" /></a
+            ><a class="auth-card__back" href="landing.html"
+              >← Volver al sitio</a
+            >
+          </div>
+          <h2>Iniciar sesión</h2>
+          <p class="auth-card__intro">
+            Ingresa a la cola de causación con el perfil que quieras probar.
+          </p>
+          <form class="form-grid" data-auth-form>
+            <label class="form-field"
+              ><span>Correo corporativo</span
+              ><input
+                type="email"
+                value="maria.contable@empresa.co"
+                placeholder="tu@empresa.co"
+                required
+                autocomplete="email" /></label
+            ><label class="form-field"
+              ><span>Rol para esta sesión</span
+              ><select
+                name="role"
+                style="
+                  width: 100%;
+                  min-height: 46px;
+                  padding: 10px 12px;
+                  border: 1px solid var(--line);
+                  border-radius: 7px;
+                  background: #fbfcfd;
+                  color: var(--navy);
+                  font-size: 11px;
+                "
+              >
+                <option value="aprobador">
+                  Aprobadora autorizada (autoriza diferencias y aprueba)
+                </option>
+                <option value="revisor">
+                  Revisora financiera (corrige lecturas y adjunta soportes)
+                </option>
+                <option value="lector">
+                  Consulta y auditoría (solo lectura de expedientes)
+                </option>
+              </select></label
+            ><label class="form-field"
+              ><span>Contraseña de demostración</span
+              ><input
+                type="password"
+                value="demo2026"
+                placeholder="••••••••"
+                required
+                minlength="4"
+                autocomplete="current-password"
+            /></label>
+            <div class="form-hint">
+              <label
+                ><input type="checkbox" checked /> Mantener rol en esta
+                sesión</label
+              ><a href="index.html#resumen" data-demo-auth>Entrar directo</a>
+            </div>
+            <button class="button button--blue button--full" type="submit">
+              Entrar a la cola <span aria-hidden="true">→</span>
+            </button>
+          </form>
+          <p
+            class="auth-message"
+            role="status"
+            aria-live="polite"
+            data-auth-message
+          ></p>
+          <p class="auth-switch">
+            ¿Quieres probar otro acceso?
+            <a href="registro.html">Crear cuenta</a>
+          </p>
+          <p class="legal-note">
+            Demostración de interfaz: los permisos definitivos se vuelven a
+            comprobar siempre en el servidor.
+          </p>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

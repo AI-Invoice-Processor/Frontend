@@ -1,17 +1,3392 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" class="no-js">
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>AI Invoice Processor · Revisiones</title>
     <meta
       name="description"
-      content="AI Invoice Processor — análisis documental de facturas en modo demostración"
+      content="Revisa facturas, órdenes de compra, contratos y soportes con reglas verificables y decisiones trazables."
     />
-    <title>AI Invoice Processor</title>
+    <meta name="theme-color" content="#10243D" />
+    <meta property="og:title" content="AI Invoice Processor · Revisiones" />
+    <meta
+      property="og:description"
+      content="Revisión documental de facturas, contratos, órdenes de compra y soportes."
+    />
+    <meta
+      property="og:image"
+      content="AI_Invoice_Processor_Enterprise_Identity_v1/04_Social_Media/PNG/open-graph-white-1200x630.png"
+    />
+    <link
+      rel="icon"
+      href="AI_Invoice_Processor_Enterprise_Identity_v1/02_Favicon_Avatar/PNG/favicon-transparent.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="AI_Invoice_Processor_Enterprise_Identity_v1/02_Favicon_Avatar/PNG/favicon-180.png"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      document.documentElement.className =
+        document.documentElement.className.replace("no-js", "js");
+    </script>
+    <link rel="stylesheet" href="/css/app.css" />
+    <script src="/config/runtime.js"></script>
+    <script defer src="/js/api.js"></script>
+    <script defer src="/vendor/gsap.min.js"></script>
+    <script defer src="/js/app.js"></script>
   </head>
+
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <a class="skip-link" href="#main-content">Saltar al contenido</a>
+    <div class="app-shell">
+      <aside class="sidebar" data-sidebar aria-label="Navegación principal">
+        <div class="sidebar__top">
+          <a
+            class="app-brand"
+            href="landing.html"
+            aria-label="AI Invoice Processor, ir a portada"
+          >
+            <img
+              src="AI_Invoice_Processor_Enterprise_Identity_v1/01_Logos/SVG/logo-horizontal-white-transparent.svg"
+              alt="AI Invoice Processor"
+            />
+          </a>
+          <button
+            class="icon-button sidebar__close"
+            type="button"
+            data-sidebar-close
+            aria-label="Cerrar navegación"
+          >
+            ×
+          </button>
+        </div>
+
+        <button
+          class="workspace-switch"
+          type="button"
+          data-switch-workspace
+          aria-label="Cambiar espacio o rol de trabajo"
+        >
+          <span class="workspace-switch__mark">AI</span>
+          <span
+            ><small>NEPXA 2026 · Reto 04</small
+            ><strong data-workspace-label>Finanzas · COP</strong></span
+          >
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </button>
+
+        <nav class="sidebar__nav">
+          <p class="nav-label">Operación</p>
+          <a class="nav-item" href="#resumen" data-nav="resumen"
+            ><img
+              src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-audit-navy.svg"
+              alt=""
+            />Resumen</a
+          >
+          <a class="nav-item" href="#documentos" data-nav="documentos"
+            ><img
+              src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-process-navy.svg"
+              alt=""
+            />Documentos</a
+          >
+          <a
+            class="nav-item is-active"
+            href="#revisiones"
+            data-nav="revisiones"
+            aria-current="page"
+            ><img
+              src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-review-navy.svg"
+              alt=""
+            />Revisiones</a
+          >
+          <a class="nav-item" href="#visor-lmm" data-nav="visor-lmm"
+            ><img
+              src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-search-navy.svg"
+              alt=""
+            />Visor LMM</a
+          >
+          <a class="nav-item" href="#reglas" data-nav="reglas"
+            ><img
+              src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-compare-navy.svg"
+              alt=""
+            />Reglas</a
+          >
+          <p class="nav-label nav-label--spaced">Administración</p>
+          <a class="nav-item" href="#auditoria" data-nav="auditoria"
+            ><img
+              src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-audit-navy.svg"
+              alt=""
+            />Auditoría</a
+          >
+          <a class="nav-item" href="#integraciones" data-nav="integraciones"
+            ><img
+              src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-export-navy.svg"
+              alt=""
+            />Integraciones</a
+          >
+          <a class="nav-item" href="#configuracion" data-nav="configuracion"
+            ><img
+              src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-settings-navy.svg"
+              alt=""
+            />Configuración</a
+          >
+        </nav>
+
+        <div class="sidebar__bottom">
+          <a class="help-card" href="landing.html#capacidades"
+            ><span class="help-card__icon">?</span>
+            <div>
+              <strong>Gobernanza y control</strong
+              ><small>Ver guía visual y flujo</small>
+            </div>
+            <span aria-hidden="true">↗</span>
+          </a>
+          <div class="profile-card">
+            <span class="avatar avatar--navy" data-role-avatar>MC</span
+            ><span
+              ><strong data-role-name>María Contable</strong
+              ><small data-role-title>Aprobadora autorizada</small></span
+            ><button
+              class="icon-button"
+              type="button"
+              data-open-role
+              aria-label="Cambiar rol o cerrar sesión"
+              title="Cambiar rol o cerrar sesión"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path
+                  d="M10 5H6.5A1.5 1.5 0 0 0 5 6.5v11A1.5 1.5 0 0 0 6.5 19H10M13 8l4 4-4 4M17 12H9"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <div class="sidebar-backdrop" data-sidebar-close></div>
+
+      <div class="app-main">
+        <main id="main-content" class="content">
+          <!-- Encabezado de la vista -->
+          <div class="page-heading">
+            <div class="page-heading__title">
+              <button
+                class="icon-button menu-toggle"
+                type="button"
+                data-sidebar-toggle
+                aria-label="Abrir navegación"
+              >
+                ☰
+              </button>
+              <div>
+                <!-- Migas de pan de la sección -->
+                <nav
+                  class="page-breadcrumbs"
+                  aria-label="Migas de pan de la sección"
+                >
+                  <span class="eyebrow__mark" aria-hidden="true"></span>
+                  <a
+                    href="#resumen"
+                    class="breadcrumb-link"
+                    data-breadcrumb-root
+                    >AI Invoice Processor</a
+                  >
+                  <span class="breadcrumb-sep" aria-hidden="true">/</span>
+                  <span class="breadcrumb-section" data-breadcrumb-section
+                    >Operación</span
+                  >
+                  <span class="breadcrumb-sep" aria-hidden="true">/</span>
+                  <span class="breadcrumb-kicker" data-breadcrumb-kicker
+                    ><span data-kicker>Cola de causación</span></span
+                  >
+                  <span class="breadcrumb-sep" aria-hidden="true">/</span>
+                  <strong class="breadcrumb-current" data-breadcrumb-current
+                    >Revisiones</strong
+                  >
+                </nav>
+                <h1 data-page-title>Revisiones</h1>
+                <p class="page-description" data-page-description>
+                  El sistema verifica con reglas claras. Tú corriges, justificas
+                  y decides con respaldo documental.
+                </p>
+              </div>
+            </div>
+            <div class="page-actions" data-page-actions style="display: none">
+              <button
+                class="button button--secondary"
+                type="button"
+                data-export
+              >
+                Descargar JSON <span aria-hidden="true">↓</span>
+              </button>
+              <button
+                class="button button--primary"
+                type="button"
+                data-open-upload
+              >
+                <img
+                  src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-upload-navy.svg"
+                  alt=""
+                />Cargar documentos
+              </button>
+            </div>
+          </div>
+
+          <!-- VISTA 1: REVISIONES -->
+          <div class="route-view" data-route-view="revisiones">
+            <!-- Franja horizontal superior: Propuesta de causación + Acciones (arriba de las cards) -->
+            <div
+              class="proposal-horizontal-bar panel route-reveal"
+              aria-label="Propuesta de causación y decisión"
+            >
+              <div class="proposal-box proposal-box--horizontal">
+                <div class="proposal-box__head">
+                  <span class="activity-badge activity-badge--blue"
+                    ><img
+                      src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-approve-navy.svg"
+                      alt=""
+                  /></span>
+                  <div>
+                    <strong>Propuesta de causación</strong>
+                    <span class="pill pill--review" data-proposal-status
+                      >Bloqueada</span
+                    >
+                  </div>
+                </div>
+                <div class="proposal-line">
+                  <span>Cuenta y centro sugeridos</span
+                  ><strong data-proposal-account
+                    >5135 · Servicios / CC-01</strong
+                  >
+                </div>
+                <div class="proposal-line">
+                  <span>Base autorizada en OC</span
+                  ><strong data-proposal-base>$50.000.000</strong>
+                </div>
+                <div class="proposal-line">
+                  <span>Diferencia por justificar</span
+                  ><strong class="text-warning" data-proposal-diff
+                    >$2.000.000 (4,00 %)</strong
+                  >
+                </div>
+              </div>
+              <div class="review-actions review-actions--horizontal">
+                <button
+                  class="button button--secondary"
+                  type="button"
+                  data-request-review
+                >
+                  Autorizar diferencia con soporte
+                </button>
+                <button
+                  class="button button--primary"
+                  type="button"
+                  data-approve
+                >
+                  Aprobar propuesta <span aria-hidden="true">→</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Área de trabajo -->
+            <section
+              class="workspace route-reveal"
+              aria-label="Área de revisión documental"
+            >
+              <div class="queue-panel panel">
+                <div class="panel-heading">
+                  <div>
+                    <h2>Cola de causación</h2>
+                    <p>
+                      <span data-queue-count>6</span> casos representativos ·
+                      clic para inspeccionar
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Filtros integrados en Cola de causación -->
+                <div class="queue-toolbar">
+                  <div class="queue-toolbar__inputs">
+                    <label class="field field--search queue-search">
+                      <span class="search-icon">⌕</span>
+                      <span class="sr-only">Buscar en revisiones</span>
+                      <input
+                        type="search"
+                        placeholder="Buscar factura, proveedor o estado"
+                        data-review-search
+                      />
+                    </label>
+                    <button
+                      class="queue-period-trigger"
+                      type="button"
+                      data-open-period-modal
+                      aria-haspopup="dialog"
+                      aria-expanded="false"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                      >
+                        <rect
+                          x="3.5"
+                          y="5"
+                          width="17"
+                          height="15.5"
+                          rx="2.5"
+                        ></rect>
+                        <path d="M7.5 3.5v3M16.5 3.5v3M3.5 9.5h17"></path>
+                      </svg>
+                      <span data-period-trigger-label
+                        >Fecha: Todos los períodos</span
+                      >
+                      <span
+                        class="queue-period-trigger__chevron"
+                        aria-hidden="true"
+                        >⌄</span
+                      >
+                    </button>
+                  </div>
+                  <div
+                    class="filter-pills queue-pills"
+                    role="group"
+                    aria-label="Estado de revisión"
+                  >
+                    <button
+                      class="filter-pill is-active"
+                      type="button"
+                      data-filter="all"
+                    >
+                      Todos <span data-pill-all>6</span>
+                    </button>
+                    <button
+                      class="filter-pill"
+                      type="button"
+                      data-filter="review"
+                    >
+                      Requieren revisión <span data-pill-review>3</span>
+                    </button>
+                    <button
+                      class="filter-pill"
+                      type="button"
+                      data-filter="ready"
+                    >
+                      Con propuesta <span data-pill-ready>2</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="queue-list" data-queue-list>
+                  <button
+                    class="queue-row is-selected"
+                    type="button"
+                    data-case="FE-9001"
+                    data-status="review"
+                    data-period="2026-09"
+                    data-search="FE-9001 INV-001 diferencia orden compra D2 servicios integrados 52000000"
+                    aria-current="true"
+                  >
+                    <span class="queue-row__status status status--review"></span
+                    ><span class="queue-row__main"
+                      ><strong>FE-9001 · Diferencia OC</strong
+                      ><span>Factura supera la orden en 4 %</span
+                      ><small>Subtotal $52 M vs. OC $50 M</small></span
+                    ><span class="queue-row__amount">$61.880.000</span>
+                  </button>
+                  <button
+                    class="queue-row"
+                    type="button"
+                    data-case="FE-1001"
+                    data-status="ready"
+                    data-period="2026-09"
+                    data-search="FE-1001 INV-002 factura correcta conciliada consultoria andina"
+                  >
+                    <span class="queue-row__status status status--ready"></span
+                    ><span class="queue-row__main"
+                      ><strong>FE-1001 · Factura limpia</strong
+                      ><span>Coincide con orden y acta</span
+                      ><small>Propuesta lista para aprobar</small></span
+                    ><span class="queue-row__amount">$1.190.000</span>
+                  </button>
+                  <button
+                    class="queue-row"
+                    type="button"
+                    data-case="FE-1003"
+                    data-status="review"
+                    data-period="2026-09"
+                    data-search="FE-1003 INV-003 error aritmetico lectura OCR total V4 suministros"
+                  >
+                    <span class="queue-row__status status status--review"></span
+                    ><span class="queue-row__main"
+                      ><strong>FE-1003 · Error en total</strong
+                      ><span>Subtotal más IVA no cuadra</span
+                      ><small>Desajuste de $110.000 por revisar</small></span
+                    ><span class="queue-row__amount">$1.300.000</span>
+                  </button>
+                  <button
+                    class="queue-row"
+                    type="button"
+                    data-case="FE-1006"
+                    data-status="review"
+                    data-period="closed"
+                    data-search="FE-1006 INV-006 soporte faltante recepcion parcial contrato vencido"
+                  >
+                    <span class="queue-row__status status status--review"></span
+                    ><span class="queue-row__main"
+                      ><strong>FE-1006 · Sin soporte</strong
+                      ><span>Falta acta de recepción</span
+                      ><small>No evaluada · requiere adjunto</small></span
+                    ><span class="queue-row__amount">$4.250.000</span>
+                  </button>
+                  <button
+                    class="queue-row"
+                    type="button"
+                    data-case="FE-1011"
+                    data-status="ready"
+                    data-period="2026-09"
+                    data-search="FE-1011 INV-011 excepcion autorizada adenda tolerancia nube"
+                  >
+                    <span class="queue-row__status status status--ready"></span
+                    ><span class="queue-row__main"
+                      ><strong>FE-1011 · Autorizada</strong
+                      ><span>Diferencia respaldada con adenda</span
+                      ><small>Hallazgo conservado · lista</small></span
+                    ><span class="queue-row__amount">$11.900.000</span>
+                  </button>
+                  <button
+                    class="queue-row"
+                    type="button"
+                    data-case="FE-1004"
+                    data-status="processing"
+                    data-period="2026-09"
+                    data-search="FE-1004 INV-004 duplicado confirmado rechazada V6 transporte"
+                  >
+                    <span
+                      class="queue-row__status status status--processing"
+                    ></span
+                    ><span class="queue-row__main"
+                      ><strong>FE-1004 · Duplicada</strong
+                      ><span>Mismo NIT, prefijo y número</span
+                      ><small>Rechazada para evitar doble pago</small></span
+                    ><span class="queue-row__amount">$2.380.000</span>
+                  </button>
+                  <div class="empty-filter" data-empty-filter hidden>
+                    No hay expedientes con estos filtros.
+                  </div>
+                </div>
+                <nav
+                  class="queue-pagination"
+                  data-queue-pagination
+                  aria-label="Paginación de expedientes"
+                >
+                  <button
+                    class="queue-pagination__button"
+                    type="button"
+                    data-page-prev
+                    aria-label="Página anterior"
+                    disabled
+                  >
+                    <span aria-hidden="true">←</span>
+                  </button>
+                  <span
+                    class="queue-pagination__status"
+                    data-page-status
+                    aria-live="polite"
+                    >Página 1 de 1</span
+                  >
+                  <button
+                    class="queue-pagination__button"
+                    type="button"
+                    data-page-next
+                    aria-label="Página siguiente"
+                    disabled
+                  >
+                    <span aria-hidden="true">→</span>
+                  </button>
+                </nav>
+              </div>
+
+              <article class="document-panel panel" aria-live="polite">
+                <div class="document-heading">
+                  <div>
+                    <div class="document-heading__id">
+                      <span class="status status--review"></span
+                      ><strong data-detail-id>FE-9001</strong
+                      ><span class="pill pill--review" data-detail-status
+                        >Requiere revisión</span
+                      >
+                    </div>
+                    <p data-detail-subtitle>
+                      Caso principal · Validación ejecutada · Sin aprobación
+                      automática
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="document-tabs"
+                  role="tablist"
+                  aria-label="Documentos del expediente"
+                >
+                  <button
+                    class="document-tab is-active"
+                    type="button"
+                    role="tab"
+                    aria-selected="true"
+                    data-tab="invoice"
+                  >
+                    Factura</button
+                  ><button
+                    class="document-tab"
+                    type="button"
+                    role="tab"
+                    aria-selected="false"
+                    data-tab="purchase"
+                  >
+                    Orden de compra</button
+                  ><button
+                    class="document-tab"
+                    type="button"
+                    role="tab"
+                    aria-selected="false"
+                    data-tab="contract"
+                  >
+                    Contrato</button
+                  ><button
+                    class="document-tab"
+                    type="button"
+                    role="tab"
+                    aria-selected="false"
+                    data-tab="support"
+                  >
+                    Soportes <span data-support-count>0</span>
+                  </button>
+                </div>
+                <div
+                  class="document-preview pdf-viewer"
+                  data-document-preview
+                  tabindex="0"
+                  aria-label="Visor de documentos PDF del expediente"
+                >
+                  <!-- Barra de herramientas del visor PDF -->
+                  <div class="pdf-viewer__toolbar">
+                    <div class="pdf-viewer__nav">
+                      <div class="pdf-doc-badge">
+                        <span class="pdf-badge-icon">PDF</span>
+                        <span class="pdf-doc-title" data-pdf-doc-title
+                          >Factura electrónica · FE-9001.pdf</span
+                        >
+                        <span class="pdf-doc-counter"
+                          >(<span data-pdf-doc-index>1</span> de
+                          <span data-pdf-doc-total>4</span>)</span
+                        >
+                      </div>
+                    </div>
+
+                    <div class="pdf-viewer__controls">
+                      <span class="pdf-page-indicator" data-pdf-page-indicator
+                        >Pág. <strong data-pdf-page-num>1</strong>/1</span
+                      >
+                      <div class="pdf-zoom-group">
+                        <button
+                          class="mini-button"
+                          type="button"
+                          data-zoom-out
+                          aria-label="Reducir zoom"
+                          title="Reducir (−)"
+                        >
+                          −
+                        </button>
+                        <span class="pdf-zoom-label" data-zoom-label>100%</span>
+                        <button
+                          class="mini-button"
+                          type="button"
+                          data-zoom-in
+                          aria-label="Aumentar zoom"
+                          title="Aumentar (+)"
+                        >
+                          +
+                        </button>
+                      </div>
+                      <button
+                        class="mini-button mini-button--icon"
+                        type="button"
+                        data-zoom-fit
+                        title="Ajustar escala (100%)"
+                        aria-label="Ajustar escala"
+                      >
+                        ⤢
+                      </button>
+                      <button
+                        class="mini-button mini-button--icon"
+                        type="button"
+                        data-download-doc
+                        aria-label="Descargar PDF del documento"
+                        title="Descargar PDF"
+                      >
+                        ↓
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Escenario del visor y hoja PDF A4 -->
+                  <div class="pdf-viewer__stage">
+                    <div class="pdf-viewport-scroller">
+                      <div class="pdf-real-document" data-pdf-real-document hidden>
+                        <iframe
+                          class="pdf-real-frame"
+                          data-pdf-frame
+                          title="Documento PDF real del expediente"
+                          loading="lazy"
+                        ></iframe>
+                      </div>
+                      <div class="invoice-sheet pdf-page" data-invoice-sheet>
+                        <!-- Membrete y encabezado de representación gráfica DIAN / PDF oficial -->
+                        <div class="pdf-official-header">
+                          <div class="pdf-official-badge">
+                            <span class="pdf-seal-badge" data-doc-badge
+                              >[SINTÉTICO · COP]</span
+                            >
+                            <span class="pdf-official-legend" data-doc-kind
+                              >Representación gráfica · Factura de venta</span
+                            >
+                            <span class="sr-only" data-preview-type
+                              >Factura electrónica (DOC-001)</span
+                            >
+                          </div>
+                          <div class="pdf-security-meta">
+                            <span class="pdf-cufe-label"
+                              >CUFE / HASH FISCAL:</span
+                            >
+                            <code class="pdf-cufe-code" data-pdf-cufe
+                              >CUFE-DIAN:
+                              8e4b7c12f09a83d5e672b14c90d8a17f3e2b5c89</code
+                            >
+                          </div>
+                        </div>
+
+                        <div class="invoice-sheet__head">
+                          <div>
+                            <small>Proveedor / Emisor</small>
+                            <strong data-invoice-vendor
+                              >Servicios Integrados Colombia S.A.S.</strong
+                            >
+                            <span data-invoice-nit
+                              >NIT 900654321-0 · DV válido</span
+                            >
+                          </div>
+                          <div class="invoice-sheet__number">
+                            <small>No. documento</small>
+                            <strong data-invoice-number>FE-9001</strong>
+                            <span data-invoice-date
+                              >20 sep 2026 · Periodo abierto</span
+                            >
+                          </div>
+                        </div>
+
+                        <div class="invoice-sheet__meta">
+                          <span
+                            ><small>Contrato</small
+                            ><strong data-invoice-contract
+                              >CT-01 · Vigente</strong
+                            ></span
+                          >
+                          <span
+                            ><small>Orden vinculada</small
+                            ><strong data-invoice-order
+                              >OC-9001 ($50.000.000)</strong
+                            ></span
+                          >
+                          <span
+                            ><small>Moneda</small
+                            ><strong>COP · Peso colombiano</strong></span
+                          >
+                        </div>
+
+                        <table class="invoice-table">
+                          <thead>
+                            <tr>
+                              <th>Concepto</th>
+                              <th>Cant.</th>
+                              <th>Valor unitario</th>
+                              <th>Importe</th>
+                            </tr>
+                          </thead>
+                          <tbody data-invoice-tbody>
+                            <tr>
+                              <td data-invoice-line>
+                                Servicios especializados de operación (sin
+                                descuento)
+                              </td>
+                              <td>1</td>
+                              <td>$52.000.000</td>
+                              <td>$52.000.000</td>
+                            </tr>
+                            <tr>
+                              <td>
+                                Valor autorizado en Orden de Compra OC-9001
+                              </td>
+                              <td>1</td>
+                              <td>$50.000.000</td>
+                              <td>Base OC</td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                        <div class="invoice-sheet__totals">
+                          <span
+                            >Subtotal
+                            <strong data-invoice-subtotal
+                              >$52.000.000</strong
+                            ></span
+                          >
+                          <span
+                            >IVA (19 %)
+                            <strong data-invoice-iva>$9.880.000</strong></span
+                          >
+                          <span class="invoice-total"
+                            >Total con IVA
+                            <strong data-invoice-total
+                              >$61.880.000</strong
+                            ></span
+                          >
+                        </div>
+
+                        <div class="invoice-sheet__footer">
+                          <span data-invoice-footer
+                            >Retenciones ($3.926.000) y neto a pagar
+                            ($57.954.000) informados por separado: no se restan
+                            del total facturado ni se validan
+                            automáticamente.</span
+                          >
+                          <span
+                            class="qr-placeholder"
+                            aria-label="Código QR de demostración"
+                          ></span>
+                        </div>
+
+                        <!-- Barra inferior de pie de página de PDF -->
+                        <div class="pdf-page-footer-bar">
+                          <span
+                            >Documento electrónico verificado · Firma digital
+                            certificada</span
+                          >
+                          <span>Pág. 1 de 1 · Expediente de causación</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <aside
+                class="review-panel panel"
+                aria-label="Resumen de revisión"
+              >
+                <div class="panel-heading">
+                  <div>
+                    <h2>Qué comprobó el sistema</h2>
+                    <p>Cálculo interno y cruce comercial</p>
+                  </div>
+                  <span
+                    class="confidence-badge"
+                    data-confidence-badge
+                    aria-label="7 correctas y 1 alerta"
+                    ><span
+                      class="confidence-pin confidence-pin--success"
+                      aria-hidden="true"
+                    ></span
+                    ><strong>7 correctas</strong
+                    ><span class="confidence-separator" aria-hidden="true"
+                      >·</span
+                    ><span
+                      class="confidence-pin confidence-pin--warning"
+                      aria-hidden="true"
+                    ></span
+                    ><strong>1 alerta</strong></span
+                  >
+                </div>
+                <div class="comparison-list" data-comparison-list>
+                  <details
+                    class="comparison-row comparison-row--accordion"
+                    data-accordion
+                  >
+                    <summary class="comparison-row__summary">
+                      <span
+                        class="comparison-row__icon comparison-row__icon--ok"
+                        >✓</span
+                      >
+                      <span class="comparison-row__main"
+                        ><strong>Aritmética e IVA</strong
+                        ><small
+                          >Subtotal $52 M más IVA $9,88 M cuadra con el
+                          total</small
+                        ></span
+                      >
+                      <span class="comparison-row__arrow" aria-label="Ver más">
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M4 6L8 10L12 6"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </span>
+                    </summary>
+                    <div class="comparison-row__drawer">
+                      <div class="comparison-drawer-content">
+                        <div class="comparison-drawer__header">
+                          <span class="comparison-drawer__rule-tag"
+                            >Reglas V1 a V4 · Aritmética e IVA</span
+                          >
+                        </div>
+                        <div class="comparison-drawer__grid">
+                          <div class="comparison-drawer__item">
+                            <span class="comparison-drawer__label"
+                              >Subtotal base</span
+                            ><strong class="comparison-drawer__val"
+                              >$52.000.000</strong
+                            >
+                          </div>
+                          <div class="comparison-drawer__item">
+                            <span class="comparison-drawer__label"
+                              >IVA 19 %</span
+                            ><strong class="comparison-drawer__val"
+                              >$9.880.000</strong
+                            >
+                          </div>
+                          <div class="comparison-drawer__item">
+                            <span class="comparison-drawer__label"
+                              >Total calculado</span
+                            ><strong
+                              class="comparison-drawer__val comparison-drawer__val--ok"
+                              >$61.880.000</strong
+                            >
+                          </div>
+                          <div class="comparison-drawer__item">
+                            <span class="comparison-drawer__label"
+                              >Tolerancia</span
+                            ><strong class="comparison-drawer__val"
+                              >≤ 1 COP</strong
+                            >
+                          </div>
+                        </div>
+                        <p class="comparison-drawer__note">
+                          La suma de líneas y el cálculo de IVA del 19 %
+                          coinciden exactamente con el total declarado en la
+                          factura.
+                        </p>
+                      </div>
+                    </div>
+                  </details>
+                  <details
+                    class="comparison-row comparison-row--accordion"
+                    data-accordion
+                  >
+                    <summary class="comparison-row__summary">
+                      <span
+                        class="comparison-row__icon comparison-row__icon--ok"
+                        >✓</span
+                      >
+                      <span class="comparison-row__main"
+                        ><strong>Identidad y fecha</strong
+                        ><small
+                          >NIT 900654321-0 válido y proveedor coincide</small
+                        ></span
+                      >
+                      <span class="comparison-row__arrow" aria-label="Ver más">
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M4 6L8 10L12 6"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </span>
+                    </summary>
+                    <div class="comparison-row__drawer">
+                      <div class="comparison-drawer-content">
+                        <div class="comparison-drawer__header">
+                          <span class="comparison-drawer__rule-tag"
+                            >Reglas V5 a V7 y D1 · Identidad y Contrato</span
+                          >
+                        </div>
+                        <div class="comparison-drawer__grid">
+                          <div class="comparison-drawer__item">
+                            <span class="comparison-drawer__label"
+                              >NIT emisor</span
+                            ><strong class="comparison-drawer__val"
+                              >900654321-0</strong
+                            >
+                          </div>
+                          <div class="comparison-drawer__item">
+                            <span class="comparison-drawer__label"
+                              >Dígito DV</span
+                            ><strong class="comparison-drawer__val"
+                              >Válido (DIAN M11)</strong
+                            >
+                          </div>
+                          <div class="comparison-drawer__item">
+                            <span class="comparison-drawer__label"
+                              >Contrato</span
+                            ><strong class="comparison-drawer__val"
+                              >CT-01 (Vigente)</strong
+                            >
+                          </div>
+                          <div class="comparison-drawer__item">
+                            <span class="comparison-drawer__label"
+                              >Duplicidad</span
+                            ><strong
+                              class="comparison-drawer__val comparison-drawer__val--ok"
+                              >Sin duplicados</strong
+                            >
+                          </div>
+                        </div>
+                        <p class="comparison-drawer__note">
+                          Proveedor registrado en catálogo institucional con
+                          contrato marco vigente y periodo contable sep 2026
+                          abierto.
+                        </p>
+                      </div>
+                    </div>
+                  </details>
+                  <details
+                    class="comparison-row comparison-row--accordion"
+                    data-accordion
+                  >
+                    <summary class="comparison-row__summary">
+                      <span
+                        class="comparison-row__icon comparison-row__icon--warning"
+                        >!</span
+                      >
+                      <span class="comparison-row__main"
+                        ><strong>Orden de compra</strong
+                        ><small
+                          >OC autoriza $50.000.000 y factura cobra
+                          $52.000.000</small
+                        ></span
+                      >
+                      <span class="comparison-row__arrow" aria-label="Ver más">
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M4 6L8 10L12 6"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </span>
+                    </summary>
+                    <div class="comparison-row__drawer">
+                      <div class="comparison-drawer-content">
+                        <div class="comparison-drawer__header">
+                          <span class="comparison-drawer__rule-tag"
+                            >Regla D2 · Cruce con Orden de Compra</span
+                          >
+                        </div>
+                        <div class="comparison-drawer__grid">
+                          <div class="comparison-drawer__item">
+                            <span class="comparison-drawer__label"
+                              >Base autorizada OC</span
+                            ><strong class="comparison-drawer__val"
+                              >$50.000.000</strong
+                            >
+                          </div>
+                          <div class="comparison-drawer__item">
+                            <span class="comparison-drawer__label"
+                              >Base facturada</span
+                            ><strong class="comparison-drawer__val"
+                              >$52.000.000</strong
+                            >
+                          </div>
+                          <div class="comparison-drawer__item">
+                            <span class="comparison-drawer__label"
+                              >Diferencia neta</span
+                            ><strong
+                              class="comparison-drawer__val comparison-drawer__val--warning"
+                              >+$2.000.000</strong
+                            >
+                          </div>
+                          <div class="comparison-drawer__item">
+                            <span class="comparison-drawer__label"
+                              >Desviación (%)</span
+                            ><strong
+                              class="comparison-drawer__val comparison-drawer__val--warning"
+                              >+4,00 %</strong
+                            >
+                          </div>
+                        </div>
+                        <p class="comparison-drawer__note">
+                          La factura supera el subtotal autorizado en la orden
+                          OC-9001. La causación en cuenta 5135 queda bloqueada
+                          preventivamente.
+                        </p>
+                      </div>
+                    </div>
+                  </details>
+                </div>
+                <div class="exception-box" data-exception-box>
+                  <div
+                    class="lmm-inline-box"
+                    data-lmm-inline-box
+                    aria-live="polite"
+                    aria-label="Estado de revisión de inteligencia artificial"
+                  >
+                    <div class="lmm-stream-state" data-lmm-stream-state hidden>
+                      <span class="ui-spinner" aria-hidden="true"></span>
+                      <div class="lmm-stream-state__text">
+                        <strong data-lmm-stream-title
+                          >Agente LMM Cloud · Procesando expediente...</strong
+                        >
+                        <small data-lmm-stream-step
+                          >Preparando documentos para el análisis</small
+                        >
+                        <span class="lmm-stream-progress" aria-hidden="true"
+                          ><i data-lmm-stream-bar></i
+                        ></span>
+                      </div>
+                    </div>
+                    <div class="lmm-ready-banner" data-lmm-ready-banner>
+                      <div class="lmm-ready-banner__left">
+                        <button
+                          class="lmm-ready-claude-badge"
+                          type="button"
+                          data-open-lmm-viewer
+                          aria-label="Abrir respuesta de Claude en Visor LMM"
+                        >
+                          <svg
+                            class="claude-mark"
+                            viewBox="0 0 32 32"
+                            aria-hidden="true"
+                          >
+                            <path
+                              d="M16 3v26M3 16h26M6.8 6.8l18.4 18.4M25.2 6.8 6.8 25.2M10.6 4.2l10.8 23.6M21.4 4.2 10.6 27.8M4.2 10.6l23.6 10.8M27.8 10.6 4.2 21.4"
+                            ></path>
+                          </svg>
+                          <strong data-lmm-ready-title
+                            >RESPUESTA DE CLAUDE</strong
+                          >
+                          <span
+                            class="lmm-ready-claude-arrow"
+                            aria-hidden="true"
+                            >→</span
+                          >
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </aside>
+            </section>
+          </div>
+
+          <!-- VISTA VISOR DE RESPUESTAS LMM CLOUD (LECTURA SIMPLE Y BAJA CARGA COGNITIVA) -->
+          <div class="route-view" data-route-view="visor-lmm">
+            <section
+              class="lmm-workspace route-reveal"
+              aria-label="Visor de lectura de respuestas Cloud LMM"
+            >
+              <!-- Columna izquierda: Historial simplificado y bien alineado -->
+              <aside
+                class="lmm-history-panel panel"
+                aria-label="Historial de respuestas Cloud LMM"
+              >
+                <div class="panel-heading">
+                  <div>
+                    <h2>Historial de respuestas</h2>
+                    <p>Selecciona una factura para leer el dictamen de Cloud</p>
+                  </div>
+                  <span class="pill pill--ready">Solo lectura</span>
+                </div>
+
+                <div
+                  class="lmm-history-filters"
+                  role="group"
+                  aria-label="Filtrar por estado de revisión"
+                >
+                  <button
+                    class="lmm-filter-chip is-active"
+                    type="button"
+                    data-lmm-filter="all"
+                  >
+                    Todas
+                  </button>
+                  <button
+                    class="lmm-filter-chip"
+                    type="button"
+                    data-lmm-filter="oc"
+                  >
+                    Diferencia OC
+                  </button>
+                  <button
+                    class="lmm-filter-chip"
+                    type="button"
+                    data-lmm-filter="math"
+                  >
+                    Importes
+                  </button>
+                  <button
+                    class="lmm-filter-chip"
+                    type="button"
+                    data-lmm-filter="support"
+                  >
+                    Soportes
+                  </button>
+                </div>
+
+                <div class="lmm-history-search">
+                  <label class="sr-only" for="lmm-history-search-input"
+                    >Buscar respuestas LMM</label
+                  >
+                  <span aria-hidden="true">⌕</span>
+                  <input
+                    id="lmm-history-search-input"
+                    type="search"
+                    data-lmm-search
+                    placeholder="Buscar factura, proveedor o estado"
+                    autocomplete="off"
+                  />
+                </div>
+
+                <div class="lmm-history-list" data-lmm-history-list>
+                  <button
+                    class="lmm-history-item is-selected"
+                    type="button"
+                    data-lmm-case="FE-9001"
+                    data-lmm-cat="oc"
+                    aria-current="true"
+                  >
+                    <span class="activity-badge activity-badge--amber"
+                      ><span class="queue-pin" aria-hidden="true"></span
+                    ></span>
+                    <span class="lmm-history-item__body">
+                      <strong>FE-9001 · Servicios Integrados</strong>
+                      <span>Supera la orden de compra en $2.000.000</span>
+                    </span>
+                  </button>
+
+                  <button
+                    class="lmm-history-item"
+                    type="button"
+                    data-lmm-case="FE-1001"
+                    data-lmm-cat="math"
+                  >
+                    <span class="activity-badge activity-badge--green"
+                      ><span class="queue-pin" aria-hidden="true"></span
+                    ></span>
+                    <span class="lmm-history-item__body">
+                      <strong>FE-1001 · Consultoría Andinos</strong>
+                      <span>Conciliada con orden y acta firmada</span>
+                    </span>
+                  </button>
+
+                  <button
+                    class="lmm-history-item"
+                    type="button"
+                    data-lmm-case="FE-1003"
+                    data-lmm-cat="math"
+                  >
+                    <span class="activity-badge activity-badge--amber"
+                      ><span class="queue-pin" aria-hidden="true"></span
+                    ></span>
+                    <span class="lmm-history-item__body">
+                      <strong>FE-1003 · Suministros del Norte</strong>
+                      <span>Diferencia de $110.000 en el total leído</span>
+                    </span>
+                  </button>
+
+                  <button
+                    class="lmm-history-item"
+                    type="button"
+                    data-lmm-case="FE-1006"
+                    data-lmm-cat="support"
+                  >
+                    <span class="activity-badge activity-badge--blue"
+                      ><span class="queue-pin" aria-hidden="true"></span
+                    ></span>
+                    <span class="lmm-history-item__body">
+                      <strong>FE-1006 · Ingeniería del Valle</strong>
+                      <span>Pendiente por adjuntar acta de entrega</span>
+                    </span>
+                  </button>
+
+                  <button
+                    class="lmm-history-item"
+                    type="button"
+                    data-lmm-case="FE-1011"
+                    data-lmm-cat="oc"
+                  >
+                    <span class="activity-badge activity-badge--green"
+                      ><span class="queue-pin" aria-hidden="true"></span
+                    ></span>
+                    <span class="lmm-history-item__body">
+                      <strong>FE-1011 · Tecnología y Nube</strong>
+                      <span>Ampliación respaldada con adenda firmada</span>
+                    </span>
+                  </button>
+
+                  <button
+                    class="lmm-history-item"
+                    type="button"
+                    data-lmm-case="FE-1004"
+                    data-lmm-cat="support"
+                  >
+                    <span class="activity-badge activity-badge--navy"
+                      ><span class="queue-pin" aria-hidden="true"></span
+                    ></span>
+                    <span class="lmm-history-item__body">
+                      <strong>FE-1004 · Logística Nacional</strong>
+                      <span>Segundo intento detenido por duplicidad</span>
+                    </span>
+                  </button>
+                </div>
+
+                <nav
+                  class="lmm-history-pagination"
+                  data-lmm-pagination
+                  hidden
+                  aria-label="Paginación del historial LMM"
+                >
+                  <button
+                    class="lmm-pagination-button"
+                    type="button"
+                    data-lmm-page-prev
+                    aria-label="Página anterior"
+                  >
+                    ←
+                  </button>
+                  <span data-lmm-page-status>Página 1 de 1</span>
+                  <button
+                    class="lmm-pagination-button"
+                    type="button"
+                    data-lmm-page-next
+                    aria-label="Página siguiente"
+                  >
+                    →
+                  </button>
+                </nav>
+
+                <div class="lmm-readonly-note">
+                  <i></i>
+                  <span
+                    >Visor de lectura: consulta el análisis generado en la nube
+                    sin campos de chat ni comandos.</span
+                  >
+                </div>
+              </aside>
+
+              <!-- Columna derecha: Lectura tipográfica limpia (sin tablas ni saturación) -->
+              <article class="lmm-viewer-frame panel" aria-live="polite">
+                <div class="lmm-doc-toolbar">
+                  <div class="lmm-doc-toolbar__left">
+                    <span
+                      class="lmm-cloud-badge"
+                      aria-label="Respuesta de Claude"
+                    >
+                      <svg
+                        class="claude-mark"
+                        viewBox="0 0 32 32"
+                        aria-hidden="true"
+                        focusable="false"
+                      >
+                        <g>
+                          <path
+                            d="M16 3v26M3 16h26M6.8 6.8l18.4 18.4M25.2 6.8 6.8 25.2M10.6 4.2l10.8 23.6M21.4 4.2 10.6 27.8M4.2 10.6l23.6 10.8M27.8 10.6 4.2 21.4"
+                          />
+                        </g>
+                      </svg>
+                      RESPUESTA DE CLAUDE
+                    </span>
+                    <span class="lmm-doc-model" data-lmm-sources
+                      >Documentos leídos: DOC-001.pdf y DOC-OC-9001.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="text-button"
+                    type="button"
+                    data-route-action="revisiones"
+                  >
+                    Abrir expediente en Revisiones →
+                  </button>
+                </div>
+
+                <div class="lmm-canvas-wrap">
+                  <!-- Estado de carga tipo Spinner -->
+                  <div class="lmm-spinner-stage" data-lmm-skeleton hidden>
+                    <span
+                      class="ui-spinner ui-spinner--lg"
+                      aria-hidden="true"
+                    ></span>
+                    <strong data-lmm-skeleton-title
+                      >Cargando respuesta de Cloud LMM...</strong
+                    >
+                    <small
+                      >Preparando la lectura estructurada de la factura
+                      seleccionada</small
+                    >
+                  </div>
+
+                  <!-- Hoja de lectura editorial simple -->
+                  <div class="lmm-document-sheet" data-lmm-sheet>
+                    <header class="lmm-reader-header">
+                      <div>
+                        <p class="lmm-doc-kicker" data-lmm-kicker>
+                          LECTURA DE REVISIÓN PARA CAUSACIÓN · FE-9001
+                        </p>
+                        <h2 class="lmm-doc-title" data-lmm-title>
+                          Comparación comercial entre la factura FE-9001 y su
+                          Orden de Compra
+                        </h2>
+                        <p class="lmm-doc-sub" data-lmm-subtitle>
+                          Proveedor: Servicios Integrados Colombia S.A.S. ·
+                          Orden vinculada: OC-9001
+                        </p>
+                      </div>
+                    </header>
+
+                    <!-- Conclusión principal con icono grande -->
+                    <div
+                      class="lmm-verdict-card lmm-verdict-card--warning"
+                      data-lmm-summary-box
+                    >
+                      <span
+                        class="activity-badge activity-badge--amber"
+                        data-lmm-verdict-icon
+                        ><img
+                          src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-compare-navy.svg"
+                          alt=""
+                      /></span>
+                      <div>
+                        <h3 data-lmm-summary-heading>
+                          Conclusión para el analista financiero
+                        </h3>
+                        <p data-lmm-summary-copy>
+                          La factura <span class="lmm-tag">FE-9001</span> cumple
+                          todas las validaciones aritméticas e impositivas
+                          internas, pero su subtotal antes de impuestos (<span
+                            class="lmm-num"
+                            >COP 52.000.000</span
+                          >) supera en
+                          <span class="lmm-num">+COP 2.000.000 (+4,00 %)</span>
+                          el valor autorizado en la Orden de Compra
+                          <span class="lmm-tag">OC-9001</span> (<span
+                            class="lmm-num"
+                            >COP 50.000.000</span
+                          >). La comparación se realiza estrictamente subtotal
+                          contra subtotal para no distorsionar la base con IVA
+                          ni retenciones. La causación en la cuenta
+                          <span class="lmm-tag">5135</span> queda bloqueada
+                          hasta adjuntar soporte de autorización (<span
+                            class="lmm-tag"
+                            >DOC-AUT-01</span
+                          >) o nota crédito.
+                        </p>
+                      </div>
+                    </div>
+
+                    <section
+                      class="lmm-context-grid"
+                      aria-label="Contexto operativo del backend"
+                    >
+                      <article class="lmm-context-card lmm-context-card--risk">
+                        <div class="lmm-context-card__head">
+                          <div>
+                            <p class="lmm-context-eyebrow">Riesgo del expediente</p>
+                            <h3 data-lmm-risk-title>Evaluación de riesgo</h3>
+                          </div>
+                          <span class="lmm-context-pill" data-lmm-risk-level>
+                            No reportado
+                          </span>
+                        </div>
+                        <div class="lmm-score-list">
+                          <div class="lmm-score-row">
+                            <div class="lmm-score-label">
+                              <span>Puntaje de riesgo</span>
+                              <strong data-lmm-risk-score>No reportado</strong>
+                            </div>
+                            <div
+                              class="lmm-score-track"
+                              role="progressbar"
+                              aria-label="Puntaje de riesgo"
+                              aria-valuemin="0"
+                              aria-valuemax="100"
+                              aria-valuenow="0"
+                              data-lmm-risk-score-bar
+                            >
+                              <i></i>
+                            </div>
+                          </div>
+                          <div class="lmm-score-row">
+                            <div class="lmm-score-label">
+                              <span>Confianza de la evaluación</span>
+                              <strong data-lmm-risk-confidence>No reportado</strong>
+                            </div>
+                            <div
+                              class="lmm-score-track lmm-score-track--steel"
+                              role="progressbar"
+                              aria-label="Confianza de la evaluación de riesgo"
+                              aria-valuemin="0"
+                              aria-valuemax="100"
+                              aria-valuenow="0"
+                              data-lmm-risk-confidence-bar
+                            >
+                              <i></i>
+                            </div>
+                          </div>
+                        </div>
+                      </article>
+
+                      <article class="lmm-context-card lmm-context-card--proposal">
+                        <div class="lmm-context-card__head">
+                          <div>
+                            <p class="lmm-context-eyebrow">Propuesta contable</p>
+                            <h3>Valores recibidos del backend</h3>
+                          </div>
+                          <span class="lmm-context-pill" data-lmm-proposal-status>
+                            Sin propuesta
+                          </span>
+                        </div>
+                        <dl class="lmm-proposal-details">
+                          <div>
+                            <dt>Cuenta contable</dt>
+                            <dd data-lmm-proposal-account>—</dd>
+                          </div>
+                          <div>
+                            <dt>Centro de costo</dt>
+                            <dd data-lmm-proposal-cost-center>—</dd>
+                          </div>
+                        </dl>
+                        <div class="lmm-proposal-amounts" aria-label="Valores de la propuesta">
+                          <div>
+                            <span>Subtotal</span>
+                            <strong data-lmm-proposal-subtotal>—</strong>
+                          </div>
+                          <div>
+                            <span>Impuestos</span>
+                            <strong data-lmm-proposal-tax>—</strong>
+                          </div>
+                          <div>
+                            <span>Total</span>
+                            <strong data-lmm-proposal-total>—</strong>
+                          </div>
+                        </div>
+                      </article>
+                    </section>
+
+                    <!-- Puntos de lectura clara en texto plano estructurado (sin tablas) -->
+                    <div class="lmm-reading-section">
+                      <h3>Desglose de la revisión en lenguaje claro</h3>
+                      <div class="lmm-reading-points" data-lmm-blocks>
+                        <article class="lmm-reading-point">
+                          <span
+                            class="lmm-reading-point__dot"
+                            aria-hidden="true"
+                            >1</span
+                          >
+                          <div>
+                            <strong
+                              >Base de comparación homogénea (Subtotal vs.
+                              Subtotal)</strong
+                            >
+                            <p>
+                              El motor descarta comparar el neto a pagar (<span
+                                class="lmm-num"
+                                >COP 57.954.000</span
+                              >) o el total con IVA (<span class="lmm-num"
+                                >COP 61.880.000</span
+                              >) contra el tope contractual sin impuestos. Al
+                              comparar bases homogéneas antes de IVA (<span
+                                class="lmm-num"
+                                >COP 52.000.000</span
+                              >
+                              vs. <span class="lmm-num">COP 50.000.000</span>),
+                              se aísla con exactitud el sobrecosto comercial de
+                              <span class="lmm-num">COP 2.000.000</span>.
+                            </p>
+                          </div>
+                        </article>
+                        <article class="lmm-reading-point">
+                          <span
+                            class="lmm-reading-point__dot"
+                            aria-hidden="true"
+                            >2</span
+                          >
+                          <div>
+                            <strong
+                              >Tratamiento contable de retenciones
+                              informadas</strong
+                            >
+                            <p>
+                              Las retenciones leídas en el PDF (ReteFuente,
+                              ReteICA y ReteIVA por
+                              <span class="lmm-num">COP 3.926.000</span>) se
+                              registran como metadato informativo para
+                              tesorería, sin restarlas del total de la factura.
+                            </p>
+                          </div>
+                        </article>
+                        <article class="lmm-reading-point">
+                          <span
+                            class="lmm-reading-point__dot"
+                            aria-hidden="true"
+                            >3</span
+                          >
+                          <div>
+                            <strong
+                              >Condición para liberar la causación en cuenta
+                              5135</strong
+                            >
+                            <p>
+                              Para habilitar el paso a estado
+                              <span class="lmm-tag">PROPUESTA</span> en la
+                              cuenta
+                              <span class="lmm-tag">5135 · Servicios</span> y
+                              centro de costo
+                              <span class="lmm-tag">CC-01</span>, una persona
+                              con rol Aprobadora debe asociar el documento de
+                              respaldo (adenda o autorización comercial)
+                              conservando el hallazgo original en la auditoría.
+                            </p>
+                          </div>
+                        </article>
+                      </div>
+                    </div>
+
+                    <section class="lmm-reading-section lmm-exceptions-section">
+                      <div class="lmm-section-heading">
+                        <div>
+                          <h3>Detalle de excepciones detectadas</h3>
+                          <p>
+                            Hallazgos persistidos por las validaciones del backend,
+                            con su estado y evidencia cuantitativa disponible.
+                          </p>
+                        </div>
+                        <span class="lmm-context-pill" data-lmm-exception-count>
+                          0 hallazgos
+                        </span>
+                      </div>
+                      <div
+                        class="lmm-exception-list"
+                        data-lmm-exceptions
+                        aria-live="polite"
+                      ></div>
+                    </section>
+
+                    <div class="lmm-reading-section lmm-evidence-table-section">
+                      <h3>Cruce estructurado de valores del expediente</h3>
+                      <div class="lmm-evidence-table-wrap">
+                        <table class="lmm-evidence-table">
+                          <caption data-lmm-table-caption>
+                            Valores obtenidos de la respuesta de propuesta y de las reglas del backend
+                          </caption>
+                          <thead>
+                            <tr>
+                              <th scope="col">Control</th>
+                              <th scope="col">Esperado</th>
+                              <th scope="col">Actual</th>
+                              <th scope="col">Resultado</th>
+                            </tr>
+                          </thead>
+                          <tbody data-lmm-table-body></tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <!-- 3 Cifras de referencia rápida al pie -->
+                    <div class="lmm-key-figures" data-lmm-kpi-section>
+                      <div class="lmm-key-figure">
+                        <small data-lmm-kpi1-label
+                          >Subtotal factura vs. Orden</small
+                        >
+                        <strong data-lmm-kpi1-val>$52,0M vs. $50,0M</strong>
+                        <span data-lmm-kpi1-sub
+                          >Diferencia de +$2.000.000 (+4,00 %)</span
+                        >
+                      </div>
+                      <div class="lmm-key-figure">
+                        <small data-lmm-kpi2-label>IVA (19 %) y Total</small>
+                        <strong data-lmm-kpi2-val
+                          >$9,88M · Total $61,88M</strong
+                        >
+                        <span data-lmm-kpi2-sub
+                          >Retenciones ($3,92M) informadas aparte</span
+                        >
+                      </div>
+                      <div class="lmm-key-figure">
+                        <small data-lmm-kpi3-label
+                          >Cuenta sugerida para causar</small
+                        >
+                        <strong data-lmm-kpi3-val>Cuenta 5135 / CC-01</strong>
+                        <span data-lmm-kpi3-sub
+                          >Base autorizada actual: $50.000.000</span
+                        >
+                      </div>
+                    </div>
+
+                    <footer class="lmm-doc-footer">
+                      <span
+                        >Respuesta generada por el motor Cloud · Vista de
+                        lectura sin edición</span
+                      >
+                    </footer>
+                  </div>
+                </div>
+              </article>
+            </section>
+          </div>
+
+          <!-- VISTA 2: RESUMEN -->
+          <div class="route-view is-visible" data-route-view="resumen">
+            <section
+              class="metrics-grid route-reveal"
+              aria-label="Resumen operativo"
+            >
+              <article class="metric-card">
+                <div class="metric-card__top">
+                  <span class="metric-icon metric-icon--blue"
+                    ><img
+                      src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-review-navy.svg"
+                      alt="" /></span
+                  ><span class="metric-trend">Conteo del workspace</span>
+                </div>
+                <strong data-metric-total>55</strong
+                ><span>Facturas recibidas por el backend</span>
+              </article>
+              <article class="metric-card">
+                <div class="metric-card__top">
+                  <span class="metric-icon metric-icon--amber"
+                    ><img
+                      src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-alert-navy.svg"
+                      alt="" /></span
+                  ><span class="metric-status">Estado de revisión</span>
+                </div>
+                <strong data-metric-review>6</strong
+                ><span>Requieren revisión humana</span>
+              </article>
+              <article class="metric-card">
+                <div class="metric-card__top">
+                  <span class="metric-icon metric-icon--steel"
+                    ><img
+                      src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-approve-navy.svg"
+                      alt="" /></span
+                  ><span class="metric-status metric-status--success"
+                    >Resultado de Etapas 4 a 6</span
+                  >
+                </div>
+                <strong data-metric-ready>27</strong
+                ><span>Con propuesta o aprobación</span>
+              </article>
+              <article class="metric-card">
+                <div class="metric-card__top">
+                  <span class="metric-icon metric-icon--navy"
+                    ><img
+                      src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-process-navy.svg"
+                      alt="" /></span
+                  ><span class="metric-trend">Repositorio documental</span>
+                </div>
+                <strong data-metric-files>263</strong
+                ><span>Documentos registrados</span>
+              </article>
+            </section>
+
+            <!-- Fila 1 de gráficos: Estadísticas de barras + Distribución de hallazgos con iconografía grande -->
+            <section class="route-grid route-reveal">
+              <article class="route-card route-card--wide">
+                <div class="route-card__heading">
+                  <div>
+                    <p class="eyebrow">
+                      <span class="eyebrow__mark"></span> Estadísticas
+                      comparativas · Regla D2
+                    </p>
+                    <h2>Subtotal facturado vs. autorizado en OC</h2>
+                    <p class="route-card__copy">
+                      Haz clic en cualquier mes para inspeccionar el volumen
+                      comparado antes de IVA (<span data-summary-period>Ene a Sep 2026</span>).
+                    </p>
+                  </div>
+                  <div class="chart-legend" aria-label="Leyenda del gráfico">
+                    <span class="chart-legend__item"
+                      ><i class="chart-legend__dot chart-legend__dot--navy"></i>
+                      Facturado</span
+                    >
+                    <span class="chart-legend__item"
+                      ><i
+                        class="chart-legend__dot chart-legend__dot--steel"
+                      ></i>
+                      Orden de compra</span
+                    >
+                  </div>
+                </div>
+
+                <div class="bar-chart" data-bar-chart>
+                  <div class="bar-chart__yaxis" aria-hidden="true">
+                    <span>$60M</span>
+                    <span>$45M</span>
+                    <span>$30M</span>
+                    <span>$15M</span>
+                    <span>$0</span>
+                  </div>
+                  <div
+                    class="bar-chart__stage"
+                    role="group"
+                    aria-label="Comparación mensual de facturación frente a órdenes de compra"
+                  >
+                    <div class="bar-chart__grid" aria-hidden="true">
+                      <i></i><i></i><i></i><i></i><i></i>
+                    </div>
+
+                    <button
+                      class="bar-group"
+                      type="button"
+                      data-bar-month="Ene"
+                      data-inv="$18,4M"
+                      data-oc="$18,4M"
+                      data-diff="0,0 % · Conciliado"
+                      data-case-ref="FE-1001"
+                      style="--peak: 31%"
+                    >
+                      <span class="bar-group__pair">
+                        <i
+                          class="bar-pill bar-pill--invoice"
+                          style="height: 31%"
+                        ></i>
+                        <i
+                          class="bar-pill bar-pill--order"
+                          style="height: 31%"
+                        ></i>
+                      </span>
+                      <span class="bar-group__dot"></span>
+                      <span class="bar-group__label">Ene</span>
+                    </button>
+
+                    <button
+                      class="bar-group"
+                      type="button"
+                      data-bar-month="Feb"
+                      data-inv="$24,0M"
+                      data-oc="$24,0M"
+                      data-diff="0,0 % · Conciliado"
+                      data-case-ref="FE-1001"
+                      style="--peak: 40%"
+                    >
+                      <span class="bar-group__pair">
+                        <i
+                          class="bar-pill bar-pill--invoice"
+                          style="height: 40%"
+                        ></i>
+                        <i
+                          class="bar-pill bar-pill--order"
+                          style="height: 40%"
+                        ></i>
+                      </span>
+                      <span class="bar-group__dot"></span>
+                      <span class="bar-group__label">Feb</span>
+                    </button>
+
+                    <button
+                      class="bar-group"
+                      type="button"
+                      data-bar-month="Mar"
+                      data-inv="$29,5M"
+                      data-oc="$28,0M"
+                      data-diff="+$1,5M · Alerta D2"
+                      data-case-ref="FE-9001"
+                      style="--peak: 49%"
+                    >
+                      <span class="bar-group__pair">
+                        <i
+                          class="bar-pill bar-pill--invoice"
+                          style="height: 49%"
+                        ></i>
+                        <i
+                          class="bar-pill bar-pill--order"
+                          style="height: 46%"
+                        ></i>
+                      </span>
+                      <span class="bar-group__dot"></span>
+                      <span class="bar-group__label">Mar</span>
+                    </button>
+
+                    <button
+                      class="bar-group"
+                      type="button"
+                      data-bar-month="Abr"
+                      data-inv="$22,0M"
+                      data-oc="$22,0M"
+                      data-diff="0,0 % · Conciliado"
+                      data-case-ref="FE-1001"
+                      style="--peak: 37%"
+                    >
+                      <span class="bar-group__pair">
+                        <i
+                          class="bar-pill bar-pill--invoice"
+                          style="height: 37%"
+                        ></i>
+                        <i
+                          class="bar-pill bar-pill--order"
+                          style="height: 37%"
+                        ></i>
+                      </span>
+                      <span class="bar-group__dot"></span>
+                      <span class="bar-group__label">Abr</span>
+                    </button>
+
+                    <button
+                      class="bar-group"
+                      type="button"
+                      data-bar-month="May"
+                      data-inv="$35,2M"
+                      data-oc="$34,0M"
+                      data-diff="+$1,2M · Con adenda"
+                      data-case-ref="FE-1011"
+                      style="--peak: 59%"
+                    >
+                      <span class="bar-group__pair">
+                        <i
+                          class="bar-pill bar-pill--invoice"
+                          style="height: 59%"
+                        ></i>
+                        <i
+                          class="bar-pill bar-pill--order"
+                          style="height: 56%"
+                        ></i>
+                      </span>
+                      <span class="bar-group__dot"></span>
+                      <span class="bar-group__label">May</span>
+                    </button>
+
+                    <button
+                      class="bar-group"
+                      type="button"
+                      data-bar-month="Jun"
+                      data-inv="$31,0M"
+                      data-oc="$31,0M"
+                      data-diff="0,0 % · Conciliado"
+                      data-case-ref="FE-1001"
+                      style="--peak: 52%"
+                    >
+                      <span class="bar-group__pair">
+                        <i
+                          class="bar-pill bar-pill--invoice"
+                          style="height: 52%"
+                        ></i>
+                        <i
+                          class="bar-pill bar-pill--order"
+                          style="height: 52%"
+                        ></i>
+                      </span>
+                      <span class="bar-group__dot"></span>
+                      <span class="bar-group__label">Jun</span>
+                    </button>
+
+                    <button
+                      class="bar-group"
+                      type="button"
+                      data-bar-month="Jul"
+                      data-inv="$27,8M"
+                      data-oc="$27,8M"
+                      data-diff="0,0 % · Conciliado"
+                      data-case-ref="FE-1001"
+                      style="--peak: 46%"
+                    >
+                      <span class="bar-group__pair">
+                        <i
+                          class="bar-pill bar-pill--invoice"
+                          style="height: 46%"
+                        ></i>
+                        <i
+                          class="bar-pill bar-pill--order"
+                          style="height: 46%"
+                        ></i>
+                      </span>
+                      <span class="bar-group__dot"></span>
+                      <span class="bar-group__label">Jul</span>
+                    </button>
+
+                    <button
+                      class="bar-group"
+                      type="button"
+                      data-bar-month="Ago"
+                      data-inv="$38,6M"
+                      data-oc="$38,6M"
+                      data-diff="Pendiente acta D4"
+                      data-case-ref="FE-1006"
+                      style="--peak: 64%"
+                    >
+                      <span class="bar-group__pair">
+                        <i
+                          class="bar-pill bar-pill--invoice"
+                          style="height: 64%"
+                        ></i>
+                        <i
+                          class="bar-pill bar-pill--order"
+                          style="height: 64%"
+                        ></i>
+                      </span>
+                      <span class="bar-group__dot"></span>
+                      <span class="bar-group__label">Ago</span>
+                    </button>
+
+                    <button
+                      class="bar-group has-alert is-selected"
+                      type="button"
+                      data-bar-month="Sep"
+                      data-inv="$52,0M"
+                      data-oc="$50,0M"
+                      data-diff="+$2,0M (+4,00 % · FE-9001)"
+                      data-case-ref="FE-9001"
+                      style="--peak: 87%"
+                    >
+                      <span class="bar-callout" data-bar-callout>$52,0M</span>
+                      <span class="bar-group__pair">
+                        <i
+                          class="bar-pill bar-pill--invoice"
+                          style="height: 87%"
+                        ></i>
+                        <i
+                          class="bar-pill bar-pill--order"
+                          style="height: 83%"
+                        ></i>
+                      </span>
+                      <span class="bar-group__dot"></span>
+                      <span class="bar-group__label">Sep</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="bar-summary-strip">
+                  <div>
+                    <small
+                      >Mes seleccionado (<span data-bar-month-label
+                        >Sep 2026</span
+                      >)</small
+                    ><strong data-bar-invoice-val
+                      >$52.000.000 facturados</strong
+                    >
+                  </div>
+                  <div>
+                    <small>Base autorizada en OC</small
+                    ><strong data-bar-order-val>$50.000.000 en orden</strong>
+                  </div>
+                  <div>
+                    <small>Resultado del cruce D2</small
+                    ><strong class="text-warning" data-bar-diff-val
+                      >+$2,0M (+4,00 % · FE-9001)</strong
+                    >
+                  </div>
+                </div>
+              </article>
+
+              <article class="route-card">
+                <div class="route-card__heading">
+                  <div>
+                    <p class="eyebrow">
+                      <span class="eyebrow__mark"></span> Distribución del lote
+                    </p>
+                    <h2 data-findings-title>Hallazgos en las facturas del lote</h2>
+                  </div>
+                  <span class="confidence-badge" data-audited-badge
+                    ><span></span> Auditoría en curso</span
+                  >
+                </div>
+
+                <div class="finding-list" data-finding-list>
+                  <button
+                    class="finding-item"
+                    type="button"
+                    data-open-case="FE-1001"
+                  >
+                    <span class="activity-badge activity-badge--green"
+                      ><img
+                        src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-approve-navy.svg"
+                        alt=""
+                    /></span>
+                    <span class="finding-item__body">
+                      <span class="finding-item__top">
+                        <strong>Conciliadas sin anomalía</strong>
+                        <span class="pill pill--ready">Listas</span>
+                      </span>
+                      <span class="finding-item__progress-row">
+                        <span class="finding-bar finding-bar--green"
+                          ><i style="width: 49%" data-bar-width="49%"></i
+                        ></span>
+                        <span class="finding-stat">
+                          <span class="finding-count">27 facturas</span>
+                          <strong class="finding-pct">49 %</strong>
+                        </span>
+                      </span>
+                    </span>
+                  </button>
+
+                  <button
+                    class="finding-item"
+                    type="button"
+                    data-open-case="FE-9001"
+                  >
+                    <span class="activity-badge activity-badge--amber"
+                      ><img
+                        src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-compare-navy.svg"
+                        alt=""
+                    /></span>
+                    <span class="finding-item__body">
+                      <span class="finding-item__top">
+                        <strong>Diferencia contra OC (D2)</strong>
+                        <span class="pill pill--review">+4 %</span>
+                      </span>
+                      <span class="finding-item__progress-row">
+                        <span class="finding-bar finding-bar--amber"
+                          ><i style="width: 24%" data-bar-width="24%"></i
+                        ></span>
+                        <span class="finding-stat">
+                          <span class="finding-count">6 facturas</span>
+                          <strong class="finding-pct">11 %</strong>
+                        </span>
+                      </span>
+                    </span>
+                  </button>
+
+                  <button
+                    class="finding-item"
+                    type="button"
+                    data-open-case="FE-1006"
+                  >
+                    <span class="activity-badge activity-badge--blue"
+                      ><img
+                        src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-upload-navy.svg"
+                        alt=""
+                    /></span>
+                    <span class="finding-item__body">
+                      <span class="finding-item__top">
+                        <strong>Sin soporte o sin OC (D4/E05)</strong>
+                        <span class="pill pill--review">Soportes</span>
+                      </span>
+                      <span class="finding-item__progress-row">
+                        <span class="finding-bar finding-bar--blue"
+                          ><i style="width: 28%" data-bar-width="28%"></i
+                        ></span>
+                        <span class="finding-stat">
+                          <span class="finding-count">7 facturas</span>
+                          <strong class="finding-pct">13 %</strong>
+                        </span>
+                      </span>
+                    </span>
+                  </button>
+
+                  <button
+                    class="finding-item"
+                    type="button"
+                    data-open-case="FE-1003"
+                  >
+                    <span class="activity-badge activity-badge--amber"
+                      ><img
+                        src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-alert-navy.svg"
+                        alt=""
+                    /></span>
+                    <span class="finding-item__body">
+                      <span class="finding-item__top">
+                        <strong>Desajuste en total o NIT (V1-V5)</strong>
+                        <span class="pill pill--review">Corregir</span>
+                      </span>
+                      <span class="finding-item__progress-row">
+                        <span class="finding-bar finding-bar--amber"
+                          ><i style="width: 36%" data-bar-width="36%"></i
+                        ></span>
+                        <span class="finding-stat">
+                          <span class="finding-count">11 facturas</span>
+                          <strong class="finding-pct">20 %</strong>
+                        </span>
+                      </span>
+                    </span>
+                  </button>
+
+                  <button
+                    class="finding-item"
+                    type="button"
+                    data-open-case="FE-1004"
+                  >
+                    <span class="activity-badge activity-badge--navy"
+                      ><img
+                        src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-audit-navy.svg"
+                        alt=""
+                    /></span>
+                    <span class="finding-item__body">
+                      <span class="finding-item__top">
+                        <strong>Duplicadas bloqueadas (V6)</strong>
+                        <span class="pill pill--neutral">Bloqueo</span>
+                      </span>
+                      <span class="finding-item__progress-row">
+                        <span class="finding-bar finding-bar--navy"
+                          ><i style="width: 18%" data-bar-width="18%"></i
+                        ></span>
+                        <span class="finding-stat">
+                          <span class="finding-count">4 facturas</span>
+                          <strong class="finding-pct">7 %</strong>
+                        </span>
+                      </span>
+                    </span>
+                  </button>
+                </div>
+              </article>
+            </section>
+
+            <!-- Fila 2 de gráficos: Árbol interactivo de trazabilidad + Línea de tiempo con iconos grandes -->
+            <section class="route-grid route-reveal">
+              <article class="route-card route-card--wide">
+                <div class="route-card__heading route-card__heading--tree">
+                  <div>
+                    <p class="eyebrow">
+                      <span class="eyebrow__mark"></span> Gráfico de árbol ·
+                      Tres planos separados
+                    </p>
+                    <h2>
+                      Árbol de trazabilidad (<span data-tree-case-id
+                        >FE-9001</span
+                      >)
+                    </h2>
+                    <p class="route-card__copy">
+                      Visualiza cómo avanza el expediente desde la lectura hasta
+                      la decisión humana sin mezclar estados.
+                    </p>
+                  </div>
+                  <div
+                    class="tree-case-switcher"
+                    role="tablist"
+                    aria-label="Cambiar expediente en el árbol"
+                    data-tree-case-list
+                  >
+                    <button
+                      class="tree-case-pill is-active"
+                      type="button"
+                      data-tree-select="FE-9001"
+                    >
+                      FE-9001
+                    </button>
+                    <button
+                      class="tree-case-pill"
+                      type="button"
+                      data-tree-select="FE-1001"
+                    >
+                      FE-1001
+                    </button>
+                    <button
+                      class="tree-case-pill"
+                      type="button"
+                      data-tree-select="FE-1003"
+                    >
+                      FE-1003
+                    </button>
+                    <button
+                      class="tree-case-pill"
+                      type="button"
+                      data-tree-select="FE-1006"
+                    >
+                      FE-1006
+                    </button>
+                    <button
+                      class="tree-case-pill"
+                      type="button"
+                      data-tree-select="FE-1011"
+                    >
+                      FE-1011
+                    </button>
+                    <button
+                      class="tree-case-pill"
+                      type="button"
+                      data-tree-select="FE-1004"
+                    >
+                      FE-1004
+                    </button>
+                  </div>
+                </div>
+
+                <div class="trace-tree" data-trace-tree>
+                  <div class="trace-tree__planes">
+                    <span><i></i> 1. Plano documental y lectura</span>
+                    <span><i></i> 2. Ramas de validación y resolución</span>
+                    <span><i></i> 3. Propuesta y decisión humana</span>
+                  </div>
+
+                  <div class="trace-tree__canvas">
+                    <svg
+                      class="trace-tree__svg"
+                      viewBox="0 0 720 276"
+                      preserveAspectRatio="none"
+                      aria-hidden="true"
+                    >
+                      <!-- Conectores columna 1 a columna 2 -->
+                      <path
+                        class="tree-edge"
+                        data-edge="clean"
+                        d="M 215 88 C 250 88, 250 46, 285 46"
+                      ></path>
+                      <path
+                        class="tree-edge is-warning"
+                        data-edge="exception"
+                        d="M 215 138 C 250 138, 250 138, 285 138"
+                      ></path>
+                      <path
+                        class="tree-edge"
+                        data-edge="correction"
+                        d="M 215 188 C 250 188, 250 230, 285 230"
+                      ></path>
+                      <!-- Conectores columna 2 a columna 3 -->
+                      <path
+                        class="tree-edge"
+                        data-edge="clean-out"
+                        d="M 465 46 C 500 46, 500 92, 535 92"
+                      ></path>
+                      <path
+                        class="tree-edge is-warning"
+                        data-edge="exception-out"
+                        d="M 465 138 C 500 138, 500 92, 535 92"
+                      ></path>
+                      <path
+                        class="tree-edge"
+                        data-edge="correction-out"
+                        d="M 465 230 C 500 230, 500 188, 535 188"
+                      ></path>
+                    </svg>
+
+                    <!-- Columna 1: Tronco de entrada -->
+                    <div class="tree-col">
+                      <div class="tree-node is-active" data-node="ingest">
+                        <span class="tree-node__icon"
+                          ><img
+                            src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-upload-navy.svg"
+                            alt=""
+                        /></span>
+                        <span class="tree-node__meta">
+                          <span class="tree-node__step">Etapa 1 · PDF</span>
+                          <strong data-node-ingest-title
+                            >Recepción y hash</strong
+                          >
+                          <small data-node-ingest-sub>DOC-001 verificado</small>
+                        </span>
+                      </div>
+
+                      <div class="tree-node is-active" data-node="extract">
+                        <span class="tree-node__icon"
+                          ><img
+                            src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-search-navy.svg"
+                            alt=""
+                        /></span>
+                        <span class="tree-node__meta">
+                          <span class="tree-node__step">Etapas 2 y 3</span>
+                          <strong data-node-extract-title
+                            >Lectura y cruce OC</strong
+                          >
+                          <small data-node-extract-sub
+                            >OC-9001 ($50.000.000)</small
+                          >
+                        </span>
+                      </div>
+                    </div>
+
+                    <!-- Columna 2: 3 Ramas del árbol -->
+                    <div class="tree-col">
+                      <div class="tree-node" data-node="branch-clean">
+                        <span class="tree-node__icon"
+                          ><img
+                            src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-approve-navy.svg"
+                            alt=""
+                        /></span>
+                        <span class="tree-node__meta">
+                          <span class="tree-node__step">Rama A · Directa</span>
+                          <strong>Sin alertas</strong>
+                          <small data-node-clean-sub
+                            >Conciliación 100 % exacta</small
+                          >
+                        </span>
+                      </div>
+
+                      <div
+                        class="tree-node is-warning is-current"
+                        data-node="branch-exception"
+                      >
+                        <span class="tree-node__icon"
+                          ><img
+                            src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-compare-navy.svg"
+                            alt=""
+                        /></span>
+                        <span class="tree-node__meta">
+                          <span class="tree-node__step"
+                            >Rama B · Excepción D2/D4</span
+                          >
+                          <strong data-node-exc-title
+                            >Diferencia comercial</strong
+                          >
+                          <small data-node-exc-sub
+                            >Exige soporte DOC-AUT-01</small
+                          >
+                        </span>
+                      </div>
+
+                      <div class="tree-node" data-node="branch-correction">
+                        <span class="tree-node__icon"
+                          ><img
+                            src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-alert-navy.svg"
+                            alt=""
+                        /></span>
+                        <span class="tree-node__meta">
+                          <span class="tree-node__step"
+                            >Rama C · Datos / V6</span
+                          >
+                          <strong data-node-corr-title
+                            >Corrección requerida</strong
+                          >
+                          <small data-node-corr-sub
+                            >Revalida V4 o bloquea V6</small
+                          >
+                        </span>
+                      </div>
+                    </div>
+
+                    <!-- Columna 3: Propuesta y Decisión Humana -->
+                    <div class="tree-col">
+                      <div class="tree-node is-warning" data-node="proposal">
+                        <span class="tree-node__icon"
+                          ><img
+                            src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-process-navy.svg"
+                            alt=""
+                        /></span>
+                        <span class="tree-node__meta">
+                          <span class="tree-node__step"
+                            >Etapa 6 · Catálogo</span
+                          >
+                          <strong data-node-prop-title
+                            >Propuesta: Bloqueada</strong
+                          >
+                          <small data-node-prop-sub
+                            >5135 · Servicios / CC-01</small
+                          >
+                        </span>
+                      </div>
+
+                      <div class="tree-node is-active" data-node="decision">
+                        <span class="tree-node__icon"
+                          ><img
+                            src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-audit-navy.svg"
+                            alt=""
+                        /></span>
+                        <span class="tree-node__meta">
+                          <span class="tree-node__step">Etapa 7 · Persona</span>
+                          <strong data-node-dec-title
+                            >En revisión humana</strong
+                          >
+                          <small data-node-dec-sub
+                            >Sin aprobación automática</small
+                          >
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="route-card">
+                <div class="route-card__heading">
+                  <div>
+                    <p class="eyebrow">
+                      <span class="eyebrow__mark"></span> Historial paso a paso
+                    </p>
+                    <h2>
+                      Línea de tiempo (<span data-timeline-case-id>FE-9001</span
+                      >)
+                    </h2>
+                  </div>
+                  <button
+                    class="text-button"
+                    type="button"
+                    data-route-action="revisiones"
+                  >
+                    Ir a la cola →
+                  </button>
+                </div>
+                <div class="activity-list" data-timeline-list></div>
+                <div style="margin-top: 14px">
+                  <button
+                    class="button button--secondary button--full"
+                    type="button"
+                    data-route-action="reglas"
+                  >
+                    Consultar reglas de validación
+                  </button>
+                </div>
+              </article>
+            </section>
+          </div>
+
+          <!-- VISTA 3: DOCUMENTOS -->
+          <div class="route-view" data-route-view="documentos">
+            <section class="route-card route-reveal">
+              <div class="route-card__heading">
+                <div>
+                  <p class="eyebrow">
+                    <span class="eyebrow__mark"></span> Evidencia documental
+                  </p>
+                  <h2>Documentos vinculados por expediente</h2>
+                  <p class="route-card__copy">
+                    Cada validación apunta al archivo y página de donde salió el
+                    dato. Si falta un soporte obligatorio, no se inventa.
+                  </p>
+                </div>
+                <button
+                  class="button button--primary"
+                  type="button"
+                  data-open-upload
+                >
+                  <img
+                    src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-upload-navy.svg"
+                    alt=""
+                  />Cargar lote
+                </button>
+              </div>
+                <div class="doc-table" data-documents-list>
+                <div class="doc-table__head">
+                  <span>Expediente</span>
+                  <span>Archivo</span>
+                  <span>Contenido verificado</span>
+                  <span>Estado</span>
+                  <span></span>
+                </div>
+                <div class="doc-table__row">
+                  <strong>FE-9001</strong>
+                  <span>factura_FE-9001.pdf</span>
+                  <span>Factura por $52 M de subtotal ($61,88 M con IVA)</span>
+                  <span class="pill pill--review">Diferencia 4 %</span>
+                  <button
+                    class="text-button table-open-btn"
+                    type="button"
+                    data-open-case="FE-9001"
+                    aria-label="Visualizar expediente FE-9001"
+                    title="Visualizar expediente"
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="M2.5 12s3.4-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.4 5.5-9.5 5.5S2.5 12 2.5 12Z"
+                      ></path>
+                      <circle cx="12" cy="12" r="2.5"></circle>
+                    </svg>
+                  </button>
+                </div>
+                <div class="doc-table__row">
+                  <strong>FE-9001</strong>
+                  <span>orden_OC-9001.pdf</span>
+                  <span>Orden de compra autorizada por $50 M de subtotal</span>
+                  <span class="pill pill--ready">Base oficial</span>
+                  <button
+                    class="text-button table-open-btn"
+                    type="button"
+                    data-open-case="FE-9001"
+                    aria-label="Visualizar expediente FE-9001"
+                    title="Visualizar expediente"
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="M2.5 12s3.4-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.4 5.5-9.5 5.5S2.5 12 2.5 12Z"
+                      ></path>
+                      <circle cx="12" cy="12" r="2.5"></circle>
+                    </svg>
+                  </button>
+                </div>
+                <div class="doc-table__row">
+                  <strong>FE-1001</strong>
+                  <span>factura_FE-1001.pdf</span>
+                  <span>Factura conciliada con orden y acta ($1,19 M)</span>
+                  <span class="pill pill--ready">Con propuesta</span>
+                  <button
+                    class="text-button table-open-btn"
+                    type="button"
+                    data-open-case="FE-1001"
+                    aria-label="Visualizar expediente FE-1001"
+                    title="Visualizar expediente"
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="M2.5 12s3.4-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.4 5.5-9.5 5.5S2.5 12 2.5 12Z"
+                      ></path>
+                      <circle cx="12" cy="12" r="2.5"></circle>
+                    </svg>
+                  </button>
+                </div>
+                <div class="doc-table__row">
+                  <strong>FE-1003</strong>
+                  <span>factura_FE-1003.pdf</span>
+                  <span
+                    >Total impreso ($1,30 M) no cuadra con subtotal más
+                    IVA</span
+                  >
+                  <span class="pill pill--review">Error aritmético</span>
+                  <button
+                    class="text-button table-open-btn"
+                    type="button"
+                    data-open-case="FE-1003"
+                    aria-label="Visualizar expediente FE-1003"
+                    title="Visualizar expediente"
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="M2.5 12s3.4-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.4 5.5-9.5 5.5S2.5 12 2.5 12Z"
+                      ></path>
+                      <circle cx="12" cy="12" r="2.5"></circle>
+                    </svg>
+                  </button>
+                </div>
+                <div class="doc-table__row">
+                  <strong>FE-1006</strong>
+                  <span>factura_FE-1006.pdf</span>
+                  <span>Servicio sin acta de recepción adjunta</span>
+                  <span class="pill pill--review">Falta soporte</span>
+                  <button
+                    class="text-button table-open-btn"
+                    type="button"
+                    data-open-case="FE-1006"
+                    aria-label="Visualizar expediente FE-1006"
+                    title="Visualizar expediente"
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="M2.5 12s3.4-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.4 5.5-9.5 5.5S2.5 12 2.5 12Z"
+                      ></path>
+                      <circle cx="12" cy="12" r="2.5"></circle>
+                    </svg>
+                  </button>
+                </div>
+                <div class="doc-table__row">
+                  <strong>FE-1004</strong>
+                  <span>factura_FE-1004.pdf</span>
+                  <span
+                    >Mismo NIT, prefijo y número que una factura previa</span
+                  >
+                  <span class="pill pill--neutral">Duplicada</span>
+                  <button
+                    class="text-button table-open-btn"
+                    type="button"
+                    data-open-case="FE-1004"
+                    aria-label="Visualizar expediente FE-1004"
+                    title="Visualizar expediente"
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="M2.5 12s3.4-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.4 5.5-9.5 5.5S2.5 12 2.5 12Z"
+                      ></path>
+                      <circle cx="12" cy="12" r="2.5"></circle>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <nav class="documents-pagination" data-documents-pagination hidden aria-label="Paginación de documentos">
+                <button class="documents-pagination__button" type="button" data-documents-page-prev aria-label="Página anterior">←</button>
+                <span data-documents-page-status>Página 1 de 1</span>
+                <button class="documents-pagination__button" type="button" data-documents-page-next aria-label="Página siguiente">→</button>
+              </nav>
+            </section>
+            <section class="route-grid route-reveal">
+              <article class="route-card">
+                <p class="eyebrow">
+                  <span class="eyebrow__mark"></span> Cinco actos distintos
+                </p>
+                <h2>Recibir no es aprobar</h2>
+                <p class="route-card__copy">
+                  Separamos cinco pasos: recibir el archivo, extraer los datos,
+                  validar las reglas, proponer la causación y aprobar por una
+                  persona autorizada.
+                </p>
+                <button
+                  class="button button--secondary"
+                  type="button"
+                  data-open-upload
+                >
+                  Subir nuevo documento
+                </button>
+              </article>
+              <article class="route-card">
+                <p class="eyebrow">
+                  <span class="eyebrow__mark"></span> Inventario del conjunto
+                  ZIP
+                </p>
+                <h2 data-inventory-title>Inventario del backend</h2>
+                <p class="route-card__copy" data-inventory-copy>
+                  Consultando documentos, proveedores y catálogos del proceso
+                  por etapas…
+                </p>
+                <button class="text-button" type="button" data-export>
+                  Descargar resumen JSON →
+                </button>
+              </article>
+            </section>
+          </div>
+
+          <!-- VISTA 4: REGLAS (ORGANIZADAS POR PUNTOS DE CONTROL, SIN CÓDIGOS V1..V7) -->
+          <div class="route-view" data-route-view="reglas">
+            <section class="route-card route-reveal">
+              <div class="route-card__heading">
+                <div>
+                  <p class="eyebrow">
+                    <span class="eyebrow__mark"></span> Criterios de
+                    verificación contable
+                  </p>
+                  <h2>Puntos de control antes de proponer la causación</h2>
+                  <p class="route-card__copy">
+                    Cada factura pasa por tres bloques de revisión con precisión
+                    decimal exacta. Si falta un dato para comprobar un punto, se
+                    informa como pendiente sin inventar valores.
+                  </p>
+                </div>
+                <button
+                  class="button button--secondary"
+                  type="button"
+                  data-new-rule
+                >
+                  Tolerancia de redondeo: 1 COP
+                </button>
+              </div>
+
+              <div class="backend-rule-results" data-rule-live-list aria-live="polite"></div>
+              <div class="rules-groups-grid">
+                <!-- Bloque 1: Importes e impuestos -->
+                <article class="rule-group-card">
+                  <div class="rule-group-card__head">
+                    <span class="activity-badge activity-badge--blue"
+                      ><img
+                        src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-process-navy.svg"
+                        alt=""
+                    /></span>
+                    <div>
+                      <h3>Exactitud en importes e IVA</h3>
+                      <p>Comprobación aritmética de la factura</p>
+                    </div>
+                  </div>
+                  <div class="rule-points-list">
+                    <div class="rule-point-item">
+                      <span class="rule-point-dot" aria-hidden="true"></span>
+                      <div>
+                        <strong>Importe exacto por cada línea</strong>
+                        <small
+                          >Cantidad por precio unitario menos descuento debe
+                          coincidir con el valor del ítem.</small
+                        >
+                      </div>
+                      <button
+                        class="toggle is-on"
+                        type="button"
+                        aria-pressed="true"
+                        data-rule-toggle
+                      >
+                        <i></i><span>Activa</span>
+                      </button>
+                    </div>
+                    <div class="rule-point-item">
+                      <span class="rule-point-dot" aria-hidden="true"></span>
+                      <div>
+                        <strong>Suma íntegra del subtotal</strong>
+                        <small
+                          >Revisa el total de las líneas para evitar que
+                          pequeños redondeos oculten una diferencia
+                          mayor.</small
+                        >
+                      </div>
+                      <button
+                        class="toggle is-on"
+                        type="button"
+                        aria-pressed="true"
+                        data-rule-toggle
+                      >
+                        <i></i><span>Activa</span>
+                      </button>
+                    </div>
+                    <div class="rule-point-item">
+                      <span class="rule-point-dot" aria-hidden="true"></span>
+                      <div>
+                        <strong>Cálculo de IVA y total facturado</strong>
+                        <small
+                          >Verifica que el subtotal más el IVA cuadre con el
+                          total, sin restar las retenciones informadas.</small
+                        >
+                      </div>
+                      <button
+                        class="toggle is-on"
+                        type="button"
+                        aria-pressed="true"
+                        data-rule-toggle
+                      >
+                        <i></i><span>Activa</span>
+                      </button>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Bloque 2: Identidad fiscal y duplicados -->
+                <article class="rule-group-card">
+                  <div class="rule-group-card__head">
+                    <span class="activity-badge activity-badge--navy"
+                      ><img
+                        src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-audit-navy.svg"
+                        alt=""
+                    /></span>
+                    <div>
+                      <h3>Identidad y control de duplicados</h3>
+                      <p>Validación del emisor y del periodo</p>
+                    </div>
+                  </div>
+                  <div class="rule-points-list">
+                    <div class="rule-point-item">
+                      <span class="rule-point-dot" aria-hidden="true"></span>
+                      <div>
+                        <strong>NIT y dígito de verificación</strong>
+                        <small
+                          >Confirma el dígito del proveedor en Colombia. Si no
+                          aparece impreso, se reporta sin adivinar.</small
+                        >
+                      </div>
+                      <button
+                        class="toggle is-on"
+                        type="button"
+                        aria-pressed="true"
+                        data-rule-toggle
+                      >
+                        <i></i><span>Activa</span>
+                      </button>
+                    </div>
+                    <div class="rule-point-item">
+                      <span class="rule-point-dot" aria-hidden="true"></span>
+                      <div>
+                        <strong>Prevención de facturas repetidas</strong>
+                        <small
+                          >Detiene cualquier segundo intento con el mismo NIT,
+                          prefijo y número para evitar pagos dobles.</small
+                        >
+                      </div>
+                      <button
+                        class="toggle is-on"
+                        type="button"
+                        aria-pressed="true"
+                        data-rule-toggle
+                      >
+                        <i></i><span>Activa</span>
+                      </button>
+                    </div>
+                    <div class="rule-point-item">
+                      <span class="rule-point-dot" aria-hidden="true"></span>
+                      <div>
+                        <strong>Fecha de emisión y mes contable</strong>
+                        <small
+                          >Asegura que la fecha sea válida y corresponda a un
+                          periodo contable abierto para causar.</small
+                        >
+                      </div>
+                      <button
+                        class="toggle is-on"
+                        type="button"
+                        aria-pressed="true"
+                        data-rule-toggle
+                      >
+                        <i></i><span>Activa</span>
+                      </button>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Bloque 3: Respaldo comercial y recepción -->
+                <article class="rule-group-card">
+                  <div class="rule-group-card__head">
+                    <span class="activity-badge activity-badge--green"
+                      ><img
+                        src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-compare-navy.svg"
+                        alt=""
+                    /></span>
+                    <div>
+                      <h3>Orden de compra y soportes</h3>
+                      <p>Conciliación comercial del expediente</p>
+                    </div>
+                  </div>
+                  <div class="rule-points-list">
+                    <div class="rule-point-item">
+                      <span class="rule-point-dot" aria-hidden="true"></span>
+                      <div>
+                        <strong>Tope de orden de compra y contrato</strong>
+                        <small
+                          >Compara subtotal contra subtotal antes de IVA y
+                          verifica que el contrato esté vigente.</small
+                        >
+                      </div>
+                      <button
+                        class="toggle is-on"
+                        type="button"
+                        aria-pressed="true"
+                        data-rule-toggle
+                      >
+                        <i></i><span>Activa</span>
+                      </button>
+                    </div>
+                    <div class="rule-point-item">
+                      <span class="rule-point-dot" aria-hidden="true"></span>
+                      <div>
+                        <strong>Soporte de recepción conforme</strong>
+                        <small
+                          >Exige que exista acta de entrega firmada y que la
+                          cantidad recibida respalde lo cobrado.</small
+                        >
+                      </div>
+                      <button
+                        class="toggle is-on"
+                        type="button"
+                        aria-pressed="true"
+                        data-rule-toggle
+                      >
+                        <i></i><span>Activa</span>
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </section>
+          </div>
+
+          <!-- VISTA DE AUDITORÍA: TRAZABILIDAD HORIZONTAL POR CAUSACIÓN -->
+          <div class="route-view" data-route-view="auditoria">
+            <section
+              class="audit-workspace route-reveal"
+              aria-label="Trazabilidad de causaciones"
+            >
+              <aside
+                class="audit-history-panel panel"
+                aria-label="Causaciones auditadas"
+              >
+                <div class="panel-heading">
+                  <div>
+                    <h2>Historial de causaciones</h2>
+                    <p>Selecciona una causación para ver cada paso</p>
+                  </div>
+                  <span class="pill pill--ready">Solo lectura</span>
+                </div>
+                <div class="audit-toolbar">
+                  <label class="audit-search" aria-label="Buscar causación">
+                    <span aria-hidden="true">⌕</span>
+                    <input
+                      type="search"
+                      placeholder="Buscar factura, proveedor o estado"
+                      data-audit-search
+                    />
+                  </label>
+                  <div
+                    class="audit-filters"
+                    role="group"
+                    aria-label="Filtrar causaciones por estado"
+                  >
+                    <button
+                      class="audit-filter-chip is-active"
+                      type="button"
+                      data-audit-filter="all"
+                    >
+                      Todas
+                    </button>
+                    <button
+                      class="audit-filter-chip"
+                      type="button"
+                      data-audit-filter="review"
+                    >
+                      Requieren revisión
+                    </button>
+                    <button
+                      class="audit-filter-chip"
+                      type="button"
+                      data-audit-filter="ready"
+                    >
+                      Con propuesta
+                    </button>
+                    <button
+                      class="audit-filter-chip"
+                      type="button"
+                      data-audit-filter="processing"
+                    >
+                      En proceso
+                    </button>
+                  </div>
+                </div>
+                <div class="audit-history-list" data-audit-history-list></div>
+                <nav
+                  class="audit-history-pagination"
+                  data-audit-pagination
+                  hidden
+                  aria-label="Paginación del historial de causaciones"
+                >
+                  <button
+                    class="audit-pagination-button"
+                    type="button"
+                    data-audit-page-prev
+                    aria-label="Página anterior"
+                  >
+                    ←
+                  </button>
+                  <span data-audit-page-status>Página 1 de 1</span>
+                  <button
+                    class="audit-pagination-button"
+                    type="button"
+                    data-audit-page-next
+                    aria-label="Página siguiente"
+                  >
+                    →
+                  </button>
+                </nav>
+                <p class="audit-empty" data-audit-empty hidden>
+                  No hay causaciones que coincidan con el filtro.
+                </p>
+              </aside>
+
+              <article class="audit-detail-panel panel" aria-live="polite">
+                <header class="audit-detail-heading">
+                  <div>
+                    <p class="eyebrow">
+                      <span class="eyebrow__mark"></span> Trazabilidad completa
+                    </p>
+                    <h2 data-audit-title>Línea de tiempo · FE-9001</h2>
+                    <p class="audit-detail-sub" data-audit-sub>
+                      Servicios Integrados Colombia S.A.S.
+                    </p>
+                  </div>
+                  <div class="audit-detail-actions">
+                    <span class="pill pill--review" data-audit-status
+                      >Requiere revisión</span
+                    >
+                    <button
+                      class="button button--secondary"
+                      type="button"
+                      data-audit-open-lmm
+                    >
+                      Abrir en Visor LMM <span aria-hidden="true">→</span>
+                    </button>
+                  </div>
+                </header>
+                <div class="audit-timeline-scroll">
+                  <ol class="audit-timeline" data-audit-timeline></ol>
+                </div>
+                <footer class="audit-detail-footer">
+                  <span
+                    ><strong data-audit-event-count>4</strong> eventos
+                    registrados</span
+                  >
+                  <span>Registro inmutable · Solo lectura</span>
+                </footer>
+              </article>
+            </section>
+          </div>
+
+          <!-- VISTA 5: INTEGRACIONES -->
+          <div class="route-view" data-route-view="integraciones">
+            <section class="route-card route-reveal">
+              <div class="route-card__heading">
+                <div>
+                  <p class="eyebrow">
+                    <span class="eyebrow__mark"></span> Arquitectura en 7 etapas
+                  </p>
+                  <h2>Módulos desacoplados y contratos claros</h2>
+                  <p class="route-card__copy">
+                    El motor de reglas recibe datos limpios sin importar si se
+                    leyeron de un PDF digital, de una imagen escaneada o de una
+                    corrección manual.
+                  </p>
+                </div>
+              </div>
+              <div class="integration-grid">
+                <article class="integration-card">
+                  <span class="integration-card__mark">1 a 3</span>
+                  <div>
+                    <strong>Recepción, lectura y cruce documental</strong
+                    ><small
+                      >Recibe PDF o imagen, extrae líneas e impuestos con nivel
+                      de confianza y localiza la orden de compra y el
+                      contrato.</small
+                    >
+                  </div>
+                  <span class="pill pill--ready">Etapas 1 a 3</span
+                  ><button
+                    class="button button--secondary"
+                    type="button"
+                    data-connect="entrada"
+                  >
+                    Descargar ejemplo de entrada
+                  </button>
+                </article>
+                <article class="integration-card">
+                  <span class="integration-card__mark">4 a 6</span>
+                  <div>
+                    <strong>Motor financiero, riesgo y propuesta</strong
+                    ><small
+                      >Ejecuta las reglas V1 a V7 y D1 a D5 en Python con
+                      decimales exactos y sugiere cuenta y centro del catálogo
+                      oficial.</small
+                    >
+                  </div>
+                  <span class="pill pill--ready">Etapas 4 a 6</span
+                  ><button
+                    class="button button--secondary"
+                    type="button"
+                    data-connect="salida"
+                  >
+                    Descargar ejemplo de validación
+                  </button>
+                </article>
+                <article class="integration-card">
+                  <span class="integration-card__mark">Etapa 7</span>
+                  <div>
+                    <strong>Revisión humana y línea de tiempo</strong
+                    ><small
+                      >Entrega a la interfaz el estado, las excepciones, las
+                      acciones permitidas según el rol y el historial completo
+                      de decisiones.</small
+                    >
+                  </div>
+                  <span class="pill pill--neutral">Control en servidor</span
+                  ><button
+                    class="button button--secondary"
+                    type="button"
+                    data-connect="frontend"
+                  >
+                    Descargar contrato de interfaz
+                  </button>
+                </article>
+              </div>
+            </section>
+          </div>
+
+          <!-- VISTA 6: CONFIGURACIÓN -->
+          <div class="route-view" data-route-view="configuracion">
+            <section class="route-grid route-reveal">
+              <article class="route-card route-card--wide">
+                <div class="route-card__heading">
+                  <div>
+                    <p class="eyebrow">
+                      <span class="eyebrow__mark"></span> Alcance operativo del
+                      MVP
+                    </p>
+                    <h2>Parámetros de validación y permisos</h2>
+                  </div>
+                  <button
+                    class="button button--primary"
+                    type="button"
+                    data-save-settings
+                  >
+                    Guardar configuración
+                  </button>
+                </div>
+                <div class="settings-form">
+                  <label
+                    ><span>Rol activo en esta sesión</span
+                    ><select data-setting-role>
+                      <option value="aprobador">
+                        Aprobadora autorizada (autoriza y aprueba)
+                      </option>
+                      <option value="revisor">
+                        Revisora financiera (corrige y adjunta soportes)
+                      </option>
+                      <option value="lector">
+                        Consulta y auditoría (solo lectura)
+                      </option>
+                    </select></label
+                  ><label
+                    ><span>Moneda cubierta en la demostración</span
+                    ><select>
+                      <option>COP · Peso colombiano (precisión decimal)</option>
+                      <option>Otras monedas · Marcar como no evaluada</option>
+                    </select></label
+                  ><label
+                    ><span>Tolerancia de redondeo en cálculos (V1 a V4)</span
+                    ><select>
+                      <option>Hasta 1 COP de diferencia por redondeo</option>
+                      <option>
+                        Sin tolerancia en diferencias contra la orden (D2)
+                      </option>
+                    </select></label
+                  ><label
+                    ><span>Catálogo para propuestas de causación</span
+                    ><select>
+                      <option>
+                        10 cuentas y 6 centros autorizados (sin inventar)
+                      </option>
+                      <option>
+                        Asientos contables A1 a A4 · Posterior al MVP
+                      </option>
+                    </select></label
+                  >
+                </div>
+              </article>
+              <article class="route-card">
+                <p class="eyebrow">
+                  <span class="eyebrow__mark"></span> Reglas de seguridad
+                </p>
+                <h2>Límites honestos del sistema</h2>
+                <div class="preference-row">
+                  <span
+                    ><strong
+                      >Retenciones y RETEICA informadas sin cálculo
+                      automático</strong
+                    ><small
+                      >Se muestran los valores leídos del documento y se avisa
+                      que no están validados.</small
+                    ></span
+                  ><button
+                    class="toggle is-on"
+                    type="button"
+                    aria-pressed="true"
+                    data-rule-toggle
+                  >
+                    <i></i><span>Activa</span>
+                  </button>
+                </div>
+                <div class="preference-row">
+                  <span
+                    ><strong
+                      >Revalidar siempre después de corregir un dato</strong
+                    ><small
+                      >Si cambias un importe mal leído, la propuesta anterior se
+                      anula y se vuelven a correr las reglas.</small
+                    ></span
+                  ><button
+                    class="toggle is-on"
+                    type="button"
+                    aria-pressed="true"
+                    data-rule-toggle
+                  >
+                    <i></i><span>Activa</span>
+                  </button>
+                </div>
+              </article>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Modal 1: Carga de documentos -->
+    <div class="modal-backdrop" data-modal-backdrop hidden></div>
+    <section
+      class="period-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="period-modal-title"
+      data-period-modal
+      hidden
+    >
+      <div class="period-modal__heading">
+        <div>
+          <p class="eyebrow eyebrow--dark">
+            <span class="eyebrow__mark"></span> Filtro de cola
+          </p>
+          <h2 id="period-modal-title">Filtrar por período</h2>
+          <p>Selecciona el período contable que quieres revisar.</p>
+        </div>
+        <button
+          class="icon-button"
+          type="button"
+          data-close-period
+          aria-label="Cerrar filtro de período"
+        >
+          ×
+        </button>
+      </div>
+      <div class="period-options" role="group" aria-label="Períodos contables">
+        <button
+          class="period-option is-active"
+          type="button"
+          data-period-option="all"
+          aria-pressed="true"
+        >
+          <span class="period-option__icon" aria-hidden="true">✓</span>
+          <span class="period-option__copy"
+            ><strong>Todos los períodos</strong
+            ><small>Todos los expedientes disponibles</small></span
+          >
+          <span class="period-option__check" aria-hidden="true">✓</span>
+        </button>
+        <button
+          class="period-option"
+          type="button"
+          data-period-option="2026-09"
+          aria-pressed="false"
+        >
+          <span class="period-option__icon" aria-hidden="true">09</span>
+          <span class="period-option__copy"
+            ><strong>Septiembre 2026</strong
+            ><small>Período abierto</small></span
+          >
+          <span class="period-option__check" aria-hidden="true">✓</span>
+        </button>
+        <button
+          class="period-option"
+          type="button"
+          data-period-option="closed"
+          aria-pressed="false"
+        >
+          <span class="period-option__icon" aria-hidden="true">08</span>
+          <span class="period-option__copy"
+            ><strong>Agosto 2026</strong><small>Período cerrado</small></span
+          >
+          <span class="period-option__check" aria-hidden="true">✓</span>
+        </button>
+      </div>
+    </section>
+    <section
+      class="upload-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="upload-title"
+      data-upload-modal
+      hidden
+    >
+      <div class="modal-heading">
+        <div>
+          <p class="eyebrow eyebrow--dark">
+            <span class="eyebrow__mark"></span> Paso 1 · Recepción
+          </p>
+          <h2 id="upload-title">Cargar documentos</h2>
+          <p>
+            Sube la factura, la orden de compra o el acta de recepción para
+            registrar el expediente.
+          </p>
+        </div>
+        <button
+          class="icon-button"
+          type="button"
+          data-close-upload
+          aria-label="Cerrar ventana"
+        >
+          ×
+        </button>
+      </div>
+      <label class="dropzone" data-dropzone
+        ><input
+          type="file"
+          multiple
+          accept=".pdf,.xml,.jpg,.jpeg,.png"
+          data-file-input
+        /><span class="dropzone__icon"
+          ><img
+            src="AI_Invoice_Processor_Enterprise_Identity_v1/06_UI_Icons/SVG/icon-upload-navy.svg"
+            alt="" /></span
+        ><strong>Arrastra tus archivos aquí</strong
+        ><span>o selecciónalos desde tu equipo</span
+        ><small>PDF, XML, JPG o PNG · hasta 20 MB por archivo</small></label
+      >
+      <div class="file-list" data-file-list hidden></div>
+      <div class="modal-actions">
+        <button
+          class="button button--secondary"
+          type="button"
+          data-close-upload
+        >
+          Cancelar</button
+        ><button
+          class="button button--primary"
+          type="button"
+          data-process-files
+          disabled
+        >
+          Registrar y validar <span aria-hidden="true">→</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Modal 2: Acciones humanas (Corregir dato, Autorizar excepción, Asociar soporte, Rechazar, Rol) -->
+    <section
+      class="upload-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="action-modal-title"
+      data-action-modal
+      hidden
+    >
+      <div class="modal-heading">
+        <div>
+          <p class="eyebrow eyebrow--dark">
+            <span class="eyebrow__mark"></span>
+            <span data-action-kicker>Decisión documentada</span>
+          </p>
+          <h2 id="action-modal-title" data-action-title>Registrar decisión</h2>
+          <p data-action-description>
+            Toda corrección, autorización o rechazo exige un motivo claro y
+            queda en el historial.
+          </p>
+        </div>
+        <button
+          class="icon-button"
+          type="button"
+          data-close-action
+          aria-label="Cerrar ventana"
+        >
+          ×
+        </button>
+      </div>
+      <form data-action-form style="margin-top: 18px">
+        <div class="settings-form" data-action-fields></div>
+        <div class="modal-actions">
+          <button
+            class="button button--secondary"
+            type="button"
+            data-close-action
+          >
+            Cancelar
+          </button>
+          <button
+            class="button button--primary"
+            type="submit"
+            data-action-submit
+          >
+            Guardar decisión <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <div
+      class="route-transition-indicator"
+      data-route-spinner
+      aria-hidden="true"
+    >
+      <span class="ui-spinner"></span>
+      <span data-route-spinner-label>Actualizando vista...</span>
+    </div>
+    <div class="toast" role="status" aria-live="polite" data-toast></div>
+    <script>
+      document.documentElement.classList.remove("no-js");
+    </script>
   </body>
 </html>

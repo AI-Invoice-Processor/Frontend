@@ -1,0 +1,20 @@
+/* AI Invoice Processor — Enterprise design tokens */
+:root {
+  --aip-navy: #10243D;
+  --aip-midnight: #0A182B;
+  --aip-charcoal: #263545;
+  --aip-blue: #355F8B;
+  --aip-steel: #768BA0;
+  --aip-muted: #627286;
+  --aip-border: #D8E0E8;
+  --aip-surface: #FFFFFF;
+  --aip-surface-subtle: #F8FAFC;
+  --aip-success: #277B65;
+  --aip-warning: #A57739;
+  --aip-error: #A94E56;
+  --aip-font: Inter, ui-sans-serif, system-ui, sans-serif;
+  --aip-radius-sm: 6px;
+  --aip-radius-md: 10px;
+  --aip-radius-lg: 16px;
+  --aip-shadow: 0 8px 28px rgba(16, 36, 61, 0.06);
+}
