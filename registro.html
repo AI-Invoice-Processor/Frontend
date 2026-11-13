@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Crear acceso · AI Invoice Processor</title>
+    <meta
+      name="description"
+      content="Configura tu acceso al espacio de revisión documental de AI Invoice Processor."
+    />
+    <meta name="theme-color" content="#10243D" />
+    <link
+      rel="icon"
+      href="AI_Invoice_Processor_Enterprise_Identity_v1/02_Favicon_Avatar/PNG/favicon-transparent.png"
+    />
+    <script>
+      document.documentElement.className =
+        document.documentElement.className.replace("no-js", "js");
+    </script>
+    <link rel="stylesheet" href="/css/landing.css" />
+    <script defer src="/vendor/gsap.min.js"></script>
+    <script defer src="/js/landing.js"></script>
+  </head>
+  <body class="auth-page">
+    <div class="auth-shell">
+      <aside class="auth-aside">
+        <a class="auth-aside__brand" href="landing.html"
+          ><img
+            src="AI_Invoice_Processor_Enterprise_Identity_v1/01_Logos/SVG/logo-horizontal-white-transparent.svg"
+            alt="AI Invoice Processor"
+        /></a>
+        <div class="auth-aside__copy">
+          <p class="eyebrow">
+            <span class="eyebrow__mark"></span> Nuevo perfil
+          </p>
+          <h1>Verifica primero. Causa con certeza.</h1>
+          <p>
+            Crea un perfil de prueba para recorrer los 55 expedientes sintéticos
+            en COP, inspeccionar la factura FE-9001 y registrar decisiones
+            auditables.
+          </p>
+        </div>
+        <div class="auth-aside__foot">
+          Dataset sintético · Sin datos fiscales reales
+        </div>
+      </aside>
+      <main class="auth-main">
+        <section class="auth-card">
+          <div class="auth-card__top">
+            <a href="landing.html"
+              ><img
+                src="AI_Invoice_Processor_Enterprise_Identity_v1/01_Logos/SVG/logo-horizontal-on-white.svg"
+                alt="AI Invoice Processor" /></a
+            ><a class="auth-card__back" href="landing.html"
+              >← Volver al sitio</a
+            >
+          </div>
+          <h2>Crear acceso</h2>
+          <p class="auth-card__intro">
+            Configura tu nombre y el rol con el que evaluarás las facturas.
+          </p>
+          <form class="form-grid" data-auth-form>
+            <label class="form-field"
+              ><span>Nombre y apellido</span
+              ><input
+                type="text"
+                name="name"
+                placeholder="Ej. María Contable"
+                required
+                autocomplete="name" /></label
+            ><label class="form-field"
+              ><span>Correo de trabajo</span
+              ><input
+                type="email"
+                placeholder="tu@empresa.co"
+                required
+                autocomplete="email" /></label
+            ><label class="form-field"
+              ><span>Rol asignado</span
+              ><select
+                name="role"
+                style="
+                  width: 100%;
+                  min-height: 46px;
+                  padding: 10px 12px;
+                  border: 1px solid var(--line);
+                  border-radius: 7px;
+                  background: #fbfcfd;
+                  color: var(--navy);
+                  font-size: 11px;
+                "
+              >
+                <option value="aprobador">
+                  Aprobadora autorizada (autoriza y aprueba)
+                </option>
+                <option value="revisor">
+                  Revisora financiera (corrige y asocia soportes)
+                </option>
+                <option value="lector">
+                  Consulta y auditoría (solo lectura)
+                </option>
+              </select></label
+            ><label class="form-field"
+              ><span>Contraseña</span
+              ><input
+                type="password"
+                placeholder="Mínimo 4 caracteres"
+                required
+                minlength="4"
+                autocomplete="new-password" /></label
+            ><button class="button button--blue button--full" type="submit">
+              Entrar a la cola <span aria-hidden="true">→</span>
+            </button>
+          </form>
+          <p
+            class="auth-message"
+            role="status"
+            aria-live="polite"
+            data-auth-message
+          ></p>
+          <p class="auth-switch">
+            ¿Ya tienes cuenta? <a href="login.html">Iniciar sesión</a>
+          </p>
+          <p class="legal-note">
+            Demostración de interfaz: el alta de usuarios y los roles se
+            conectarán al servicio de autenticación.
+          </p>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,425 @@
+[
+  {
+    "name": "logo-horizontal-primary-transparent",
+    "section": "01_Logos",
+    "width": 1460,
+    "height": 310,
+    "alpha": true,
+    "svg": "01_Logos/SVG/logo-horizontal-primary-transparent.svg",
+    "png": "01_Logos/PNG/logo-horizontal-primary-transparent.png"
+  },
+  {
+    "name": "logo-horizontal-white-transparent",
+    "section": "01_Logos",
+    "width": 1460,
+    "height": 310,
+    "alpha": true,
+    "svg": "01_Logos/SVG/logo-horizontal-white-transparent.svg",
+    "png": "01_Logos/PNG/logo-horizontal-white-transparent.png"
+  },
+  {
+    "name": "logo-horizontal-monochrome-transparent",
+    "section": "01_Logos",
+    "width": 1460,
+    "height": 310,
+    "alpha": true,
+    "svg": "01_Logos/SVG/logo-horizontal-monochrome-transparent.svg",
+    "png": "01_Logos/PNG/logo-horizontal-monochrome-transparent.png"
+  },
+  {
+    "name": "logo-horizontal-on-white",
+    "section": "01_Logos",
+    "width": 1460,
+    "height": 310,
+    "alpha": false,
+    "svg": "01_Logos/SVG/logo-horizontal-on-white.svg",
+    "png": "01_Logos/PNG/logo-horizontal-on-white.png"
+  },
+  {
+    "name": "logo-horizontal-on-navy",
+    "section": "01_Logos",
+    "width": 1460,
+    "height": 310,
+    "alpha": false,
+    "svg": "01_Logos/SVG/logo-horizontal-on-navy.svg",
+    "png": "01_Logos/PNG/logo-horizontal-on-navy.png"
+  },
+  {
+    "name": "logo-symbol-primary-transparent",
+    "section": "01_Logos",
+    "width": 600,
+    "height": 600,
+    "alpha": true,
+    "svg": "01_Logos/SVG/logo-symbol-primary-transparent.svg",
+    "png": "01_Logos/PNG/logo-symbol-primary-transparent.png"
+  },
+  {
+    "name": "logo-symbol-white-transparent",
+    "section": "01_Logos",
+    "width": 600,
+    "height": 600,
+    "alpha": true,
+    "svg": "01_Logos/SVG/logo-symbol-white-transparent.svg",
+    "png": "01_Logos/PNG/logo-symbol-white-transparent.png"
+  },
+  {
+    "name": "logo-symbol-monochrome-transparent",
+    "section": "01_Logos",
+    "width": 600,
+    "height": 600,
+    "alpha": true,
+    "svg": "01_Logos/SVG/logo-symbol-monochrome-transparent.svg",
+    "png": "01_Logos/PNG/logo-symbol-monochrome-transparent.png"
+  },
+  {
+    "name": "logo-vertical-transparent",
+    "section": "01_Logos",
+    "width": 740,
+    "height": 560,
+    "alpha": true,
+    "svg": "01_Logos/SVG/logo-vertical-transparent.svg",
+    "png": "01_Logos/PNG/logo-vertical-transparent.png"
+  },
+  {
+    "name": "logo-vertical-white-transparent",
+    "section": "01_Logos",
+    "width": 740,
+    "height": 560,
+    "alpha": true,
+    "svg": "01_Logos/SVG/logo-vertical-white-transparent.svg",
+    "png": "01_Logos/PNG/logo-vertical-white-transparent.png"
+  },
+  {
+    "name": "favicon-transparent",
+    "section": "02_Favicon_Avatar",
+    "width": 256,
+    "height": 256,
+    "alpha": true,
+    "svg": "02_Favicon_Avatar/SVG/favicon-transparent.svg",
+    "png": "02_Favicon_Avatar/PNG/favicon-transparent.png"
+  },
+  {
+    "name": "favicon-on-navy",
+    "section": "02_Favicon_Avatar",
+    "width": 256,
+    "height": 256,
+    "alpha": false,
+    "svg": "02_Favicon_Avatar/SVG/favicon-on-navy.svg",
+    "png": "02_Favicon_Avatar/PNG/favicon-on-navy.png"
+  },
+  {
+    "name": "avatar-navy-1080",
+    "section": "02_Favicon_Avatar",
+    "width": 1080,
+    "height": 1080,
+    "alpha": false,
+    "svg": "02_Favicon_Avatar/SVG/avatar-navy-1080.svg",
+    "png": "02_Favicon_Avatar/PNG/avatar-navy-1080.png"
+  },
+  {
+    "name": "avatar-white-1080",
+    "section": "02_Favicon_Avatar",
+    "width": 1080,
+    "height": 1080,
+    "alpha": false,
+    "svg": "02_Favicon_Avatar/SVG/avatar-white-1080.svg",
+    "png": "02_Favicon_Avatar/PNG/avatar-white-1080.png"
+  },
+  {
+    "name": "hero-white-1920x980",
+    "section": "03_Web_Backgrounds",
+    "width": 1920,
+    "height": 980,
+    "alpha": false,
+    "svg": "03_Web_Backgrounds/SVG/hero-white-1920x980.svg",
+    "png": "03_Web_Backgrounds/PNG/hero-white-1920x980.png"
+  },
+  {
+    "name": "hero-navy-1920x980",
+    "section": "03_Web_Backgrounds",
+    "width": 1920,
+    "height": 980,
+    "alpha": false,
+    "svg": "03_Web_Backgrounds/SVG/hero-navy-1920x980.svg",
+    "png": "03_Web_Backgrounds/PNG/hero-navy-1920x980.png"
+  },
+  {
+    "name": "grid-transparent-1280x800",
+    "section": "03_Web_Backgrounds",
+    "width": 1280,
+    "height": 800,
+    "alpha": true,
+    "svg": "03_Web_Backgrounds/SVG/grid-transparent-1280x800.svg",
+    "png": "03_Web_Backgrounds/PNG/grid-transparent-1280x800.png"
+  },
+  {
+    "name": "geometric-ornament-transparent-1200x800",
+    "section": "03_Web_Backgrounds",
+    "width": 1200,
+    "height": 800,
+    "alpha": true,
+    "svg": "03_Web_Backgrounds/SVG/geometric-ornament-transparent-1200x800.svg",
+    "png": "03_Web_Backgrounds/PNG/geometric-ornament-transparent-1200x800.png"
+  },
+  {
+    "name": "section-white-1600x640",
+    "section": "03_Web_Backgrounds",
+    "width": 1600,
+    "height": 640,
+    "alpha": false,
+    "svg": "03_Web_Backgrounds/SVG/section-white-1600x640.svg",
+    "png": "03_Web_Backgrounds/PNG/section-white-1600x640.png"
+  },
+  {
+    "name": "linkedin-banner-white-1584x396",
+    "section": "04_Social_Media",
+    "width": 1584,
+    "height": 396,
+    "alpha": false,
+    "svg": "04_Social_Media/SVG/linkedin-banner-white-1584x396.svg",
+    "png": "04_Social_Media/PNG/linkedin-banner-white-1584x396.png"
+  },
+  {
+    "name": "linkedin-banner-navy-1584x396",
+    "section": "04_Social_Media",
+    "width": 1584,
+    "height": 396,
+    "alpha": false,
+    "svg": "04_Social_Media/SVG/linkedin-banner-navy-1584x396.svg",
+    "png": "04_Social_Media/PNG/linkedin-banner-navy-1584x396.png"
+  },
+  {
+    "name": "open-graph-white-1200x630",
+    "section": "04_Social_Media",
+    "width": 1200,
+    "height": 630,
+    "alpha": false,
+    "svg": "04_Social_Media/SVG/open-graph-white-1200x630.svg",
+    "png": "04_Social_Media/PNG/open-graph-white-1200x630.png"
+  },
+  {
+    "name": "social-square-white-1080",
+    "section": "04_Social_Media",
+    "width": 1080,
+    "height": 1080,
+    "alpha": false,
+    "svg": "04_Social_Media/SVG/social-square-white-1080.svg",
+    "png": "04_Social_Media/PNG/social-square-white-1080.png"
+  },
+  {
+    "name": "social-vertical-navy-1080x1350",
+    "section": "04_Social_Media",
+    "width": 1080,
+    "height": 1350,
+    "alpha": false,
+    "svg": "04_Social_Media/SVG/social-vertical-navy-1080x1350.svg",
+    "png": "04_Social_Media/PNG/social-vertical-navy-1080x1350.png"
+  },
+  {
+    "name": "feature-capture-720x480",
+    "section": "05_Web_Illustrations",
+    "width": 720,
+    "height": 480,
+    "alpha": false,
+    "svg": "05_Web_Illustrations/SVG/feature-capture-720x480.svg",
+    "png": "05_Web_Illustrations/PNG/feature-capture-720x480.png"
+  },
+  {
+    "name": "feature-review-720x480",
+    "section": "05_Web_Illustrations",
+    "width": 720,
+    "height": 480,
+    "alpha": false,
+    "svg": "05_Web_Illustrations/SVG/feature-review-720x480.svg",
+    "png": "05_Web_Illustrations/PNG/feature-review-720x480.png"
+  },
+  {
+    "name": "feature-approve-720x480",
+    "section": "05_Web_Illustrations",
+    "width": 720,
+    "height": 480,
+    "alpha": false,
+    "svg": "05_Web_Illustrations/SVG/feature-approve-720x480.svg",
+    "png": "05_Web_Illustrations/PNG/feature-approve-720x480.png"
+  },
+  {
+    "name": "icon-upload-navy",
+    "section": "06_UI_Icons",
+    "width": 88,
+    "height": 88,
+    "alpha": true,
+    "svg": "06_UI_Icons/SVG/icon-upload-navy.svg",
+    "png": "06_UI_Icons/PNG/icon-upload-navy.png"
+  },
+  {
+    "name": "icon-upload-steel",
+    "section": "06_UI_Icons",
+    "width": 88,
+    "height": 88,
+    "alpha": true,
+    "svg": "06_UI_Icons/SVG/icon-upload-steel.svg",
+    "png": "06_UI_Icons/PNG/icon-upload-steel.png"
+  },
+  {
+    "name": "icon-process-navy",
+    "section": "06_UI_Icons",
+    "width": 88,
+    "height": 88,
+    "alpha": true,
+    "svg": "06_UI_Icons/SVG/icon-process-navy.svg",
+    "png": "06_UI_Icons/PNG/icon-process-navy.png"
+  },
+  {
+    "name": "icon-process-steel",
+    "section": "06_UI_Icons",
+    "width": 88,
+    "height": 88,
+    "alpha": true,
+    "svg": "06_UI_Icons/SVG/icon-process-steel.svg",
+    "png": "06_UI_Icons/PNG/icon-process-steel.png"
+  },
+  {
+    "name": "icon-review-navy",
+    "section": "06_UI_Icons",
+    "width": 88,
+    "height": 88,
+    "alpha": true,
+    "svg": "06_UI_Icons/SVG/icon-review-navy.svg",
+    "png": "06_UI_Icons/PNG/icon-review-navy.png"
+  },
+  {
+    "name": "icon-review-steel",
+    "section": "06_UI_Icons",
+    "width": 88,
+    "height": 88,
+    "alpha": true,
+    "svg": "06_UI_Icons/SVG/icon-review-steel.svg",
+    "png": "06_UI_Icons/PNG/icon-review-steel.png"
+  },
+  {
+    "name": "icon-approve-navy",
+    "section": "06_UI_Icons",
+    "width": 88,
+    "height": 88,
+    "alpha": true,
+    "svg": "06_UI_Icons/SVG/icon-approve-navy.svg",
+    "png": "06_UI_Icons/PNG/icon-approve-navy.png"
+  },
+  {
+    "name": "icon-approve-steel",
+    "section": "06_UI_Icons",
+    "width": 88,
+    "height": 88,
+    "alpha": true,
+    "svg": "06_UI_Icons/SVG/icon-approve-steel.svg",
+    "png": "06_UI_Icons/PNG/icon-approve-steel.png"
+  },
+  {
+    "name": "icon-alert-navy",
+    "section": "06_UI_Icons",
+    "width": 88,
+    "height": 88,
+    "alpha": true,
+    "svg": "06_UI_Icons/SVG/icon-alert-navy.svg",
+    "png": "06_UI_Icons/PNG/icon-alert-navy.png"
+  },
+  {
+    "name": "icon-alert-steel",
+    "section": "06_UI_Icons",
+    "width": 88,
+    "height": 88,
+    "alpha": true,
+    "svg": "06_UI_Icons/SVG/icon-alert-steel.svg",
+    "png": "06_UI_Icons/PNG/icon-alert-steel.png"
+  },
+  {
+    "name": "icon-settings-navy",
+    "section": "06_UI_Icons",
+    "width": 88,
+    "height": 88,
+    "alpha": true,
+    "svg": "06_UI_Icons/SVG/icon-settings-navy.svg",
+    "png": "06_UI_Icons/PNG/icon-settings-navy.png"
+  },
+  {
+    "name": "icon-settings-steel",
+    "section": "06_UI_Icons",
+    "width": 88,
+    "height": 88,
+    "alpha": true,
+    "svg": "06_UI_Icons/SVG/icon-settings-steel.svg",
+    "png": "06_UI_Icons/PNG/icon-settings-steel.png"
+  },
+  {
+    "name": "icon-audit-navy",
+    "section": "06_UI_Icons",
+    "width": 88,
+    "height": 88,
+    "alpha": true,
+    "svg": "06_UI_Icons/SVG/icon-audit-navy.svg",
+    "png": "06_UI_Icons/PNG/icon-audit-navy.png"
+  },
+  {
+    "name": "icon-audit-steel",
+    "section": "06_UI_Icons",
+    "width": 88,
+    "height": 88,
+    "alpha": true,
+    "svg": "06_UI_Icons/SVG/icon-audit-steel.svg",
+    "png": "06_UI_Icons/PNG/icon-audit-steel.png"
+  },
+  {
+    "name": "icon-export-navy",
+    "section": "06_UI_Icons",
+    "width": 88,
+    "height": 88,
+    "alpha": true,
+    "svg": "06_UI_Icons/SVG/icon-export-navy.svg",
+    "png": "06_UI_Icons/PNG/icon-export-navy.png"
+  },
+  {
+    "name": "icon-export-steel",
+    "section": "06_UI_Icons",
+    "width": 88,
+    "height": 88,
+    "alpha": true,
+    "svg": "06_UI_Icons/SVG/icon-export-steel.svg",
+    "png": "06_UI_Icons/PNG/icon-export-steel.png"
+  },
+  {
+    "name": "icon-compare-navy",
+    "section": "06_UI_Icons",
+    "width": 88,
+    "height": 88,
+    "alpha": true,
+    "svg": "06_UI_Icons/SVG/icon-compare-navy.svg",
+    "png": "06_UI_Icons/PNG/icon-compare-navy.png"
+  },
+  {
+    "name": "icon-compare-steel",
+    "section": "06_UI_Icons",
+    "width": 88,
+    "height": 88,
+    "alpha": true,
+    "svg": "06_UI_Icons/SVG/icon-compare-steel.svg",
+    "png": "06_UI_Icons/PNG/icon-compare-steel.png"
+  },
+  {
+    "name": "icon-search-navy",
+    "section": "06_UI_Icons",
+    "width": 88,
+    "height": 88,
+    "alpha": true,
+    "svg": "06_UI_Icons/SVG/icon-search-navy.svg",
+    "png": "06_UI_Icons/PNG/icon-search-navy.png"
+  },
+  {
+    "name": "icon-search-steel",
+    "section": "06_UI_Icons",
+    "width": 88,
+    "height": 88,
+    "alpha": true,
+    "svg": "06_UI_Icons/SVG/icon-search-steel.svg",
+    "png": "06_UI_Icons/PNG/icon-search-steel.png"
+  }
+]

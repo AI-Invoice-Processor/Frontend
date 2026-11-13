@@ -4,10 +4,9 @@
 
 ## Verificación
 
-- [ ] `npm run lint`
-- [ ] `npm run format:check`
-- [ ] `npm test -- --run`
-- [ ] `npm run build`
+- [ ] `node --check` para `js/*.js`
+- [ ] `docker compose -f docker-compose.prod.yml config --quiet`
+- [ ] `docker build` y comprobación de `/health`
 
 ## Checklist trunk-based
 

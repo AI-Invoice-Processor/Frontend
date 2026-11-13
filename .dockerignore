@@ -2,7 +2,15 @@
 .github
 node_modules
 dist
+public
+src
+scripts
+package*.json
+pnpm-lock.yaml
+vite.config.ts
+tsconfig*.json
 .env
 .env.*
-!.env.example
 docs
+*.log
+config/runtime.js

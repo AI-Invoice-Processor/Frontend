@@ -18,29 +18,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version: 24
-          cache: npm
+      - name: Check JavaScript syntax
+        run: |
+          for file in js/*.js; do node --check "$file"; done
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Build static image
+        run: docker build -t ai-invoice-processor/frontend:ci .
 
-      - name: Audit dependencies
-        run: npm audit --audit-level=high
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Check formatting
-        run: npm run format:check
-
-      - name: Test
-        run: npm test -- --run
-
-      - name: Build
-        run: npm run build
+      - name: Check frontend health
+        run: |
+          container="$(docker run -d ai-invoice-processor/frontend:ci)"
+          trap 'docker rm -f "$container"' EXIT
+          for attempt in $(seq 1 20); do
+            if docker exec "$container" wget -q -O /dev/null http://127.0.0.1/health; then
+              exit 0
+            fi
+            sleep 1
+          done
+          exit 1
 
   conventional-commits:
     name: conventional-commits
@@ -55,6 +50,6 @@ jobs:
       - name: Validate commit messages and PR title
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          BASE_SHA: ${{ github.event_name == 'push' && github.event.before || github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event_name == 'push' && github.sha || github.event.pull_request.head.sha || github.sha }}
         run: node scripts/validate-conventional-commits.mjs

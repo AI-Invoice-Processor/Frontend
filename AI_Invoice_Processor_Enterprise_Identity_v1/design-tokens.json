@@ -1,0 +1,27 @@
+{
+  "brand": "AI Invoice Processor",
+  "style": "enterprise / executive fintech",
+  "colors": {
+    "navy": "#10243D",
+    "midnight": "#0A182B",
+    "charcoal": "#263545",
+    "corporateBlue": "#355F8B",
+    "steel": "#768BA0",
+    "muted": "#627286",
+    "border": "#D8E0E8",
+    "surface": "#FFFFFF",
+    "surfaceSubtle": "#F8FAFC",
+    "success": "#277B65",
+    "warning": "#A57739",
+    "error": "#A94E56"
+  },
+  "typography": {
+    "family": "Inter",
+    "bodyFallback": "system-ui, sans-serif"
+  },
+  "radius": {
+    "small": 6,
+    "medium": 10,
+    "large": 16
+  }
+}
