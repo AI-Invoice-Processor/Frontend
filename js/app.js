@@ -1223,6 +1223,11 @@
   let currentActionMode = null;
   let lmmStreamTimer = null;
   let lmmSkeletonTimer = null;
+  const LIVE_SYNC_INTERVAL_MS = 8000;
+  let liveSyncTimer = null;
+  let liveSyncInFlight = false;
+  let backendListSignature = "";
+  const backendPayloadSignatures = new Map();
 
   const apiStatus = (businessStatus) => {
     if (["PROPUESTA", "APROBADA"].includes(businessStatus)) return "ready";
@@ -1515,6 +1520,25 @@
     };
   };
 
+  const apiCaseId = (item) => {
+    const fileStem = String(item?.file_name || "").replace(/\.pdf$/i, "");
+    return fileStem || item?.invoice_number || item?.invoice_id;
+  };
+
+  const backendCaseListSignature = (items) => JSON.stringify(
+    (Array.isArray(items) ? items : [])
+      .map((item) => ({
+        id: item.invoice_id,
+        caseId: apiCaseId(item),
+        status: item.business_status,
+        dataVersion: item.data_version,
+        processingStatus: item.processing_status,
+        total: item.total,
+        extractionConfidence: item.extraction_confidence,
+      }))
+      .sort((left, right) => String(left.id).localeCompare(String(right.id))),
+  );
+
   const buildLmmFromCase = (caseData) => {
     const invoice = caseData.invoiceData;
     const proposal = caseData.proposal;
@@ -1709,6 +1733,7 @@
     if (!hydrated) return;
     cases[caseId] = hydrated;
     lmmResponses[caseId] = hydrated.lmm;
+    backendPayloadSignatures.set(caseId, JSON.stringify(payload));
   };
 
   const renderBackendQueue = () => {
@@ -1899,6 +1924,8 @@
   const clearBackendViews = () => {
     Object.keys(cases).forEach((key) => delete cases[key]);
     Object.keys(lmmResponses).forEach((key) => delete lmmResponses[key]);
+    backendPayloadSignatures.clear();
+    backendListSignature = "";
     documentsPage = 1;
     const queue = $("[data-queue-list]");
     if (queue) queue.innerHTML = `<div class="empty-filter"><strong>Conectando con el backend…</strong><span>Preparando los expedientes del proceso por etapas.</span></div>`;
@@ -1931,13 +1958,126 @@
     }
   };
 
+  const refreshBackendViews = (caseId = activeCase) => {
+    renderBackendQueue();
+    renderBackendDocuments();
+    renderBackendLmmHistory();
+    renderBackendTreeCases();
+    if (caseId && cases[caseId]) setActiveCase(caseId);
+    applyQueueFilters();
+  };
+
+  const refreshBackendLiveState = async () => {
+    if (
+      !window.NepxaApi
+      || document.visibilityState !== "visible"
+      || liveSyncInFlight
+      || currentActionMode
+    ) return;
+
+    liveSyncInFlight = true;
+    const selectedCaseId = activeCase;
+    const selectedCase = cases[selectedCaseId];
+    const activeInvoiceId = selectedCase?.invoiceId;
+
+    try {
+      const [listResult, summaryResult, activeResult] = await Promise.allSettled([
+        window.NepxaApi.listCases({ limit: 100 }),
+        window.NepxaApi.getSummary(),
+        activeInvoiceId ? window.NepxaApi.getCase(activeInvoiceId) : Promise.resolve(null),
+      ]);
+
+      if (summaryResult.status === "fulfilled" && summaryResult.value) {
+        hydrateSummaryFromApi(summaryResult.value);
+      }
+
+      let viewsChanged = false;
+      const activePayloadLoaded = activeResult.status === "fulfilled" && Boolean(activeResult.value);
+      if (activePayloadLoaded && selectedCaseId) {
+        const payloadSignature = JSON.stringify(activeResult.value);
+        if (backendPayloadSignatures.get(selectedCaseId) !== payloadSignature) {
+          hydrateCaseFromApi(selectedCaseId, activeResult.value);
+          viewsChanged = true;
+        }
+      }
+
+      if (listResult.status === "fulfilled") {
+        const items = Array.isArray(listResult.value?.items) ? listResult.value.items : [];
+        const nextListSignature = backendCaseListSignature(items);
+        const listChanged = nextListSignature !== backendListSignature;
+        const availableCaseIds = new Set(items.map(apiCaseId));
+
+        Object.keys(cases)
+          .filter((caseId) => backendPayloadSignatures.has(caseId) && !availableCaseIds.has(caseId))
+          .forEach((caseId) => {
+            delete cases[caseId];
+            delete lmmResponses[caseId];
+            backendPayloadSignatures.delete(caseId);
+            viewsChanged = true;
+          });
+
+        if (listChanged) {
+          const changedItems = items.filter((item) => {
+            const caseId = apiCaseId(item);
+            const current = cases[caseId];
+            return !current
+              || current.businessState !== item.business_status
+              || current.invoiceData?.data_version !== item.data_version
+              || String(current.invoiceData?.total ?? "") !== String(item.total ?? "")
+              || String(current.invoiceData?.processing_status ?? "") !== String(item.processing_status ?? "");
+          });
+
+          const details = await Promise.all(changedItems
+            .filter((item) => item.invoice_id !== activeInvoiceId || !activePayloadLoaded)
+            .map(async (item) => {
+              try {
+                return [apiCaseId(item), await window.NepxaApi.getCase(item.invoice_id)];
+              } catch (error) {
+                console.warn(`[ai-invoice-processor] No se pudo sincronizar ${apiCaseId(item)}`, error);
+                return null;
+              }
+            }));
+
+          details.filter(Boolean).forEach(([caseId, payload]) => {
+            const payloadSignature = JSON.stringify(payload);
+            if (backendPayloadSignatures.get(caseId) !== payloadSignature) {
+              hydrateCaseFromApi(caseId, payload);
+              viewsChanged = true;
+            }
+          });
+          backendListSignature = nextListSignature;
+        }
+      } else if (listResult.status === "rejected") {
+        console.warn("[ai-invoice-processor] No se pudo sincronizar la cola", listResult.reason);
+      }
+
+      if (selectedCaseId && !cases[selectedCaseId]) {
+        activeCase = Object.keys(cases)[0] || null;
+      }
+      if (viewsChanged) refreshBackendViews(activeCase);
+    } catch (error) {
+      console.warn("[ai-invoice-processor] No se pudo actualizar el workspace", error);
+    } finally {
+      liveSyncInFlight = false;
+    }
+  };
+
+  const startBackendLiveSync = () => {
+    if (liveSyncTimer || !window.NepxaApi) return;
+    liveSyncTimer = window.setInterval(refreshBackendLiveState, LIVE_SYNC_INTERVAL_MS);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") refreshBackendLiveState();
+    });
+    window.addEventListener("focus", refreshBackendLiveState);
+  };
+
   const hydrateWorkspaceFromApi = async () => {
     if (!window.NepxaApi) return;
     clearBackendViews();
     const response = await window.NepxaApi.listCases({ limit: 100 });
+    backendListSignature = backendCaseListSignature(response.items || []);
     const entries = await Promise.all((response.items || []).map(async (item) => {
-      const fileStem = String(item.file_name || "").replace(/\.pdf$/i, "");
-      const caseId = fileStem || item.invoice_number || item.invoice_id;
+      const caseId = apiCaseId(item);
       try {
         const detail = await window.NepxaApi.getCase(item.invoice_id);
         return [caseId, detail];
@@ -1961,6 +2101,7 @@
     const summary = await window.NepxaApi.getSummary();
     hydrateSummaryFromApi(summary);
     finishWorkspaceTransition();
+    startBackendLiveSync();
   };
 
   const hydrateInventoryFromBackend = (summary) => {
