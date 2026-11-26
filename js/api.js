@@ -2,6 +2,8 @@
   "use strict";
 
   const configured = window.NEPXA_CONFIG || {};
+  if (configured.DEMO_MODE === true) return;
+
   const baseUrl = String(configured.API_BASE_URL || "http://localhost:8000")
     .replace(/\/+$/, "");
 
