@@ -5073,7 +5073,8 @@
 
   safe(() => {
     bind();
-    clearBackendViews();
+    const demoMode = window.NEPXA_CONFIG?.DEMO_MODE === true;
+    if (!demoMode) clearBackendViews();
     applyRoleUI();
     renderAuditHistoryWorkspace(activeCase);
     applyQueueFilters();
@@ -5097,6 +5098,12 @@
           clearProps: "all",
         },
       );
+    if (demoMode) {
+      finishWorkspaceTransition();
+      toast("Modo demo activo: se muestran datos sintéticos.");
+      return;
+    }
+
     hydrateWorkspaceFromApi().catch((error) => {
       console.warn("[ai-invoice-processor] Backend no disponible", error);
       clearBackendViews();
